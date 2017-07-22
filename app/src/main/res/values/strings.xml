@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TinPanDog</string>
+    <string name="bottom_menu_news">消息</string>
+    <string name="bottom_menu_schedule">日程</string>
+    <string name="bottom_menu_groups">群组</string>
+    <string name="bottom_menu_user">我的</string>
+</resources>
