@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="titles">
+        <item>Android</item>
+        <item>IOS</item>
+        <item>JAVA</item>
+        <item>C++</item>
+        <item>Ruby</item>
+        <item>WEB</item>
+        <item>HTML</item>
+        <item>PERL</item>
+        <item>C</item>
+        <item>SWIFT</item>
+        <item>Python</item>
+        <item>C</item>
+        <item>C#</item>
+        <item>JS</item>
+        <item>Android</item>
+        <item>IOS</item>
+        <item>JAVA</item>
+        <item>C++</item>
+        <item>Ruby</item>
+        <item>WEB</item>
+        <item>HTML</item>
+        <item>PERL</item>
+        <item>C</item>
+        <item>SWIFT</item>
+        <item>Python</item>
+        <item>C</item>
+        <item>C#</item>
+        <item>JS</item>
+    </string-array>
+</resources>
