@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/drawer_home1"
+        android:icon="@mipmap/ic_launcher"
+        android:title="home"/>
+    <item
+        android:id="@+id/section1"
+        android:icon="@mipmap/ic_launcher"
+        android:title="分组1"/>
+    <item
+        android:id="@+id/drawer_home2"
+        android:icon="@mipmap/ic_launcher"
+        android:title="home"/>
+    <item
+        android:id="@+id/section2"
+        android:icon="@mipmap/ic_launcher"
+        android:title="分组1"/>
+    <item
+        android:id="@+id/drawer_home3"
+        android:icon="@mipmap/ic_launcher"
+        android:title="home"/>
+    <item
+        android:id="@+id/section3"
+        android:icon="@mipmap/ic_launcher"
+        android:title="分组1"/>
+
+
+</menu>

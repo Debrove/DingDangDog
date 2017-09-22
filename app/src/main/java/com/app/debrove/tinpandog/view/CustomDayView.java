@@ -1,4 +1,4 @@
-package com.app.debrove.tinpandog.schedule;
+package com.app.debrove.tinpandog.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,11 +14,8 @@ import com.ldf.calendar.model.CalendarDate;
 import com.ldf.calendar.view.DayView;
 
 /**
- * Created by debrove on 2017/7/24.
- * Package Name : com.app.debrove.tinpandog.schedule
- * <p>
- * 自定义日历样式
- * 其中DayView来自开源库SuperCalendar
+ * Created by debrove on 2017/8/22.
+ * Package Name : com.app.debrove.tinpandog.view
  */
 
 public class CustomDayView extends DayView {
@@ -28,24 +25,19 @@ public class CustomDayView extends DayView {
     private View selectedBackground;
     private View todayBackground;
     private final CalendarDate today = new CalendarDate();
+    private Context context;
 
-    /**
-     * 构造函数
-     *
-     * @param context        上下文
-     * @param layoutResource 自定义日历的layout资源
-     */
     public CustomDayView(Context context, int layoutResource) {
         super(context, layoutResource);
+        this.context=context;
         dateTv = (TextView) findViewById(R.id.date);
-        marker = (ImageView) findViewById(R.id.marker);
+        marker = (ImageView) findViewById(R.id.maker);
         selectedBackground = findViewById(R.id.selected_background);
         todayBackground = findViewById(R.id.today_background);
     }
 
     @Override
     public void refreshContent() {
-        //你可以在这里定义你的显示规则
         renderToday(day.getDate());
         renderSelect(day.getState());
         renderMarker(day.getDate(), day.getState());
@@ -81,7 +73,6 @@ public class CustomDayView extends DayView {
             dateTv.setTextColor(Color.parseColor("#111111"));
         }
     }
-
 
     private void renderToday(CalendarDate date) {
         if (date != null) {

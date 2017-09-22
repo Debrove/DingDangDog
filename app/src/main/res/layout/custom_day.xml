@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="58.5dp"
+    android:layout_width="51.4dp"
     android:layout_height="45dp">
     <View
         android:id="@+id/today_background"
@@ -24,7 +24,7 @@
         android:layout_centerInParent="true"
         android:text="19"/>
     <ImageView
-        android:id="@+id/marker"
+        android:id="@+id/maker"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"

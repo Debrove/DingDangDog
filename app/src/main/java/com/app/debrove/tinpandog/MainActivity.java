@@ -3,14 +3,22 @@ package com.app.debrove.tinpandog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.app.debrove.tinpandog.data.source.remote.NewsRemoteDataSource;
+import com.app.debrove.tinpandog.data.source.repository.NewsRepository;
 import com.app.debrove.tinpandog.groups.GroupsFragment;
 import com.app.debrove.tinpandog.news.NewsFragment;
+import com.app.debrove.tinpandog.news.NewsPresenter;
 import com.app.debrove.tinpandog.schedule.ScheduleFragment;
 
 import butterknife.BindView;
@@ -22,7 +30,7 @@ import butterknife.ButterKnife;
  * Main activity of the app.主页面
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String KEY_BOTTOM_NAVIGATION_VIEW_SELECTED_ID = "KEY_BOTTOM_NAVIGATION_VIEW_SELECTED_ID";
 
@@ -32,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView mBottomNavigation;
+    @BindView(R.id.drawer)
+    DrawerLayout mDrawer;
+    @BindView(R.id.navigation)
+    NavigationView mNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initView();
         initFragments(savedInstanceState);
+        initPresenter();
 
         //返回app后可以保留在上次的页面，如果为空则为首页
         if (savedInstanceState != null) {
@@ -79,6 +93,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void initPresenter() {
+        new NewsPresenter(mNewsFragment, NewsRepository.getInstance(
+                NewsRemoteDataSource.getInstance()
+        ));
+    }
+
+    private void initView() {
+        //设置Toolbar和DrawerLayout实现动画和联动
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, null, 0, 0);
+        mDrawer.addDrawerListener(toggle);//设置监听
+        toggle.syncState();//加上同步
+
+        mNavigation.setNavigationItemSelectedListener(this);
     }
 
     //缓存退出时的 状态or页面
@@ -146,5 +176,13 @@ public class MainActivity extends AppCompatActivity {
                     .hide(mScheduleFragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            //ToDo
+        }
+        return true;
     }
 }
