@@ -11,12 +11,13 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_news"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:title="Dog"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -73,6 +74,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:tint="@android:color/white"
+        android:src="@drawable/ic_today_white_36dp"
         app:backgroundTint="@color/colorAccent" />
 
 </android.support.design.widget.CoordinatorLayout>

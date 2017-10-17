@@ -17,9 +17,11 @@ import android.widget.Toast;
 import com.app.debrove.tinpandog.data.source.remote.NewsRemoteDataSource;
 import com.app.debrove.tinpandog.data.source.repository.NewsRepository;
 import com.app.debrove.tinpandog.groups.GroupsFragment;
+import com.app.debrove.tinpandog.helper.BottomNavigationViewHelper;
 import com.app.debrove.tinpandog.news.NewsFragment;
 import com.app.debrove.tinpandog.news.NewsPresenter;
 import com.app.debrove.tinpandog.schedule.ScheduleFragment;
+import com.app.debrove.tinpandog.user.UserFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,11 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NewsFragment mNewsFragment;
     ScheduleFragment mScheduleFragment;
     GroupsFragment mGroupsFragment;
+    UserFragment mUserFragment;
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView mBottomNavigation;
     @BindView(R.id.drawer)
-    DrawerLayout mDrawer;
+    public DrawerLayout mDrawer;
     @BindView(R.id.navigation)
     NavigationView mNavigation;
 
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.bottom_menu_groups:
                     showFragment(mGroupsFragment);
                     break;
+                case R.id.bottom_menu_user:
+                    showFragment(mUserFragment);
+                    break;
             }
         } else {
             showFragment(mNewsFragment);
@@ -86,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         break;
                     case R.id.bottom_menu_groups:
                         showFragment(mGroupsFragment);
+                        break;
+                    case R.id.bottom_menu_user:
+                        showFragment(mUserFragment);
+                        break;
                     default:
                         break;
                 }
@@ -93,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+
+        //禁止动画效果
+        BottomNavigationViewHelper.disableShiftMode(mBottomNavigation);
     }
 
     private void initPresenter() {
@@ -126,6 +139,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mGroupsFragment.isAdded()) {
             fm.putFragment(outState, GroupsFragment.class.getSimpleName(), mGroupsFragment);
         }
+        if (mUserFragment.isAdded()) {
+            fm.putFragment(outState, UserFragment.class.getSimpleName(), mUserFragment);
+        }
     }
 
     private void initFragments(Bundle savedInstanceState) {
@@ -135,9 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mNewsFragment = NewsFragment.newInstance();
             mScheduleFragment = ScheduleFragment.newInstance();
             mGroupsFragment = GroupsFragment.newInstance();
+            mUserFragment = UserFragment.newInstance();
         } else {
             mNewsFragment = (NewsFragment) fm.getFragment(savedInstanceState, NewsFragment.class.getSimpleName());
             mScheduleFragment = (ScheduleFragment) fm.getFragment(savedInstanceState, ScheduleFragment.class.getSimpleName());
+            mGroupsFragment = (GroupsFragment) fm.getFragment(savedInstanceState, GroupsFragment.class.getSimpleName());
+            mUserFragment = (UserFragment) fm.getFragment(savedInstanceState, UserFragment.class.getSimpleName());
         }
         //添加Fragment
         if (!mNewsFragment.isAdded()) {
@@ -155,6 +174,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.container, mGroupsFragment, GroupsFragment.class.getSimpleName())
                     .commit();
         }
+        if (!mUserFragment.isAdded()) {
+            fm.beginTransaction()
+                    .add(R.id.container,mUserFragment,UserFragment.class.getSimpleName())
+                    .commit();
+        }
     }
 
     //动态展示Fragment
@@ -164,23 +188,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fm.beginTransaction().show(mNewsFragment)
                     .hide(mScheduleFragment)
                     .hide(mGroupsFragment)
+                    .hide(mUserFragment)
                     .commit();
         } else if (fragment instanceof ScheduleFragment) {
             fm.beginTransaction().show(mScheduleFragment)
                     .hide(mNewsFragment)
                     .hide(mGroupsFragment)
+                    .hide(mUserFragment)
                     .commit();
         } else if (fragment instanceof GroupsFragment) {
             fm.beginTransaction().show(mGroupsFragment)
                     .hide(mNewsFragment)
                     .hide(mScheduleFragment)
+                    .hide(mUserFragment)
+                    .commit();
+        }else if (fragment instanceof UserFragment){
+            fm.beginTransaction().show(mUserFragment)
+                    .hide(mNewsFragment)
+                    .hide(mScheduleFragment)
+                    .hide(mGroupsFragment)
                     .commit();
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             //ToDo
         }
         return true;

@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.ldf.calendar.view.Calendar;
 import com.ldf.calendar.view.MonthPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +42,8 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     TextView mShowMonthView;
     @BindView(R.id.show_year_view)
     TextView mShowYearView;
+    @BindView(R.id.show_day_view)
+    TextView mShowDayView;
     //    @BindView(R.id.choose_date_view)
 //    LinearLayout mChooseDateView;
 //    @BindView(R.id.scroll_switch)
@@ -49,14 +54,20 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     CoordinatorLayout mContent;
     @BindView(R.id.month_pager)
     MonthPager mMonthPager;
-    @BindView(R.id.list)
-    RecyclerView mList;
+    //    @BindView(R.id.list)
+//    RecyclerView mList;
+    @BindView(R.id.toolbar_schedule)
+    Toolbar mToolbarSchedule;
+    @BindView(R.id.card_show_month_view)
+    TextView mCardShowMonthView;
+    @BindView(R.id.card_show_day_view)
+    TextView mCardShowDayView;
 
     private ScheduleContract.Presenter mPresenter;
 
 //    private ScheduleAdapter mAdapter;
 
-//    private ArrayList<Schedule> events = new ArrayList<>();
+    //    private ArrayList<Schedule> events = new ArrayList<>();
     private CalendarViewAdapter calendarAdapter;
     private OnSelectDateListener onSelectDateListener;
     private int mCurrentPage = MonthPager.CURRENT_DAY_INDEX;
@@ -75,9 +86,22 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        initView();
         showCalendarView();
         showCalendarDate();
         return view;
+    }
+
+    private void initView() {
+        //Toolbar
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbarSchedule);
+        setHasOptionsMenu(true);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
     }
 
 
@@ -100,6 +124,9 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         currentDate = date;
         mShowYearView.setText(date.getYear() + "年");
         mShowMonthView.setText(date.getMonth() + "");
+        mShowDayView.setText(date.getDay() + "日");
+        mCardShowMonthView.setText(date.getMonth() + "");
+        mCardShowDayView.setText(date.getDay() + "日");
     }
 
     /**
@@ -130,6 +157,8 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
                     currentDate = currentCalendars.get(position % currentCalendars.size()).getSeedDate();
                     mShowYearView.setText(currentDate.getYear() + "年");
                     mShowMonthView.setText(currentDate.getMonth() + "");
+                    mCardShowMonthView.setText(currentDate.getMonth() + "");
+                    mCardShowDayView.setText(currentDate.getDay() + "日");
                 }
             }
 
@@ -139,11 +168,22 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         });
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //显示菜单
-//        setHasOptionsMenu(true);
+    private void initMarkData() {
+        HashMap markData = new HashMap<>();
+        //0表示红点，1表示灰点
+        markData.put("2017-10-2" , "1");
+        markData.put("2017-10-3" , "1");
+        markData.put("2017-10-5" , "1");
+        markData.put("2017-10-6" , "1");
+        markData.put("2017-10-7" , "0");
+        markData.put("2017-10-9" , "0");
+        markData.put("2017-10-11" , "0");
+        markData.put("2017-10-12" , "0");
+        markData.put("2017-10-15" , "0");
+        markData.put("2017-10-17" , "0");
+        markData.put("2017-10-18" , "0");
+        markData.put("2017-10-20" , "0");
+        calendarAdapter.setMarkData(markData);
     }
 
     @Override
@@ -168,20 +208,21 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
                 onSelectDateListener,
                 CalendarAttr.CalendayType.MONTH,
                 customDayView);
+        initMarkData();
         initMonthPager();
-
-        //events = Schedule.createSchedule("暨大羽毛球赛");
-
     }
 
     public void showCalendarDate() {
         currentDate = new CalendarDate();
         mShowYearView.setText(currentDate.getYear() + "年");
         mShowMonthView.setText(currentDate.getMonth() + "");
+        mShowDayView.setText(currentDate.getDay() + "日");
+        mCardShowMonthView.setText(currentDate.getMonth() + "");
+        mCardShowDayView.setText(currentDate.getDay() + "日");
     }
 
 
-//    //回到今天
+    //    //回到今天
 //    private void onClickBackToDayBtn() {
 //        CalendarDate today = new CalendarDate();
 //        calendarAdapter.notifyDataChanged(today);

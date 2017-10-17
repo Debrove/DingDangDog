@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">叮当狗</string>
     <string name="bottom_menu_news">消息</string>
     <string name="bottom_menu_schedule">日程</string>
     <string name="bottom_menu_groups">群组</string>

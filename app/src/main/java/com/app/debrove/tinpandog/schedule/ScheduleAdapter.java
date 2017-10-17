@@ -8,6 +8,8 @@
 //import android.widget.TextView;
 //
 //import com.app.debrove.tinpandog.R;
+//import com.app.debrove.tinpandog.data.Schedule;
+//import com.ldf.calendar.model.CalendarDate;
 //
 //import java.util.List;
 //
@@ -20,9 +22,10 @@
 //
 //    private final Context mContext;
 //    private List<Schedule> mList;
+//    private CalendarDate currentDate;
 //
-//    ScheduleAdapter(Context context, List<Schedule> list) {
-//        this.mList = list;
+//    ScheduleAdapter(Context context) {
+////        this.mList = list;
 //        this.mContext = context;
 //    }
 //
@@ -32,15 +35,16 @@
 //
 //    @Override
 //    public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        Context context=parent.getContext();
+//        Context context = parent.getContext();
 //        LayoutInflater layoutInflater = LayoutInflater.from(context);
-//        return new ViewHolder(layoutInflater.inflate(R.layout.item, parent, false));
+//        return new ViewHolder(layoutInflater.inflate(R.layout.schedule_item, parent, false));
 //    }
 //
 //    @Override
 //    public void onBindViewHolder(ViewHolder holder, int position) {
-//        Schedule item= mList.get(position);
-//        holder.textView.setText(item.getEvent());
+//        Schedule item = mList.get(position);
+//        holder.showMonthView.setText(currentDate.getMonth());
+//        holder.showDayView.setText(currentDate.getDay());
 //    }
 //
 //
@@ -50,11 +54,13 @@
 //    }
 //
 //    class ViewHolder extends RecyclerView.ViewHolder {
-//        private TextView textView;
+//        private TextView showMonthView;
+//        private TextView showDayView;
 //
 //        ViewHolder(View itemView) {
 //            super(itemView);
-//            textView = (TextView) itemView.findViewById(R.id.text_view);
+//            showMonthView = itemView.findViewById(R.id.show_month_view);
+//            showDayView = itemView.findViewById(R.id.show_day_view);
 //        }
 //    }
 //}

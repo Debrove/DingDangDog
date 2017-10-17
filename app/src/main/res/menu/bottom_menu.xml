@@ -14,4 +14,9 @@
         android:icon="@drawable/ic_group_black_48dp"
         android:title="@string/bottom_menu_groups" />
 
+    <item
+        android:id="@+id/bottom_menu_user"
+        android:icon="@drawable/ic_perm_identity_black_48dp"
+        android:title="@string/bottom_menu_user"/>
+
 </menu>
