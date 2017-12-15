@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_margin">16dp</dimen>
+    <dimen name="body_text_size">16sp</dimen>
+    <dimen name="item_image_height">64dp</dimen>
+    <dimen name="primary_margin_half">8dp</dimen>
+</resources>

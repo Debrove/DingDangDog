@@ -26,8 +26,9 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_user_info"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="84dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorBaseBackground"
             android:orientation="horizontal">
@@ -40,16 +41,33 @@
                 android:layout_marginTop="6dp"
                 android:src="@drawable/user_image" />
 
-            <TextView
-                android:id="@+id/user_name"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                android:text="用户名"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="用户名"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/telephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="手机号"
+                    android:textColor="@color/grey"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="24dp"
@@ -118,75 +136,85 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:background="@color/colorBaseBackground"
-            android:orientation="horizontal"
-            android:paddingStart="18dp">
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:src="@drawable/cards" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/colorBaseBackground"
+                android:orientation="horizontal"
+                android:paddingEnd="18dp"
+                android:paddingStart="18dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="8dp"
-                android:text="名片夹"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/cards" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingStart="8dp"
+                    android:text="名片夹"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/colorBaseBackground"
+                android:orientation="horizontal"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_favorite_red_600_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingStart="8dp"
+                    android:text="收藏"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@color/colorBaseBackground"
+                android:orientation="horizontal"
+                android:paddingStart="18dp">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder_orange_700_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingStart="8dp"
+                    android:text="活动笔记"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorBaseBackground"
-            android:orientation="horizontal"
-            android:paddingStart="18dp">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_favorite_red_600_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="8dp"
-                android:text="收藏"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorBaseBackground"
-            android:orientation="horizontal"
-            android:paddingStart="18dp">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_folder_orange_700_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="8dp"
-                android:text="活动笔记"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -2,10 +2,10 @@ package com.app.debrove.tinpandog.details;
 
 import android.support.annotation.NonNull;
 
-import com.app.debrove.tinpandog.data.Room;
-import com.app.debrove.tinpandog.data.source.datasource.RoomDataSource;
-import com.app.debrove.tinpandog.data.source.repository.RoomRepository;
-import com.app.debrove.tinpandog.data.source.repository.NewsRepository;
+import com.app.debrove.tinpandog.data.ContentType;
+import com.app.debrove.tinpandog.data.source.repository.ActivitiesRepository;
+import com.app.debrove.tinpandog.data.source.repository.LecturesRepository;
+import com.app.debrove.tinpandog.util.L;
 
 /**
  * Created by debrove on 2017/10/5.
@@ -14,20 +14,31 @@ import com.app.debrove.tinpandog.data.source.repository.NewsRepository;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
+    private static final String LOG_TAG = DetailsPresenter.class.getSimpleName();
+
     @NonNull
     private final DetailsContract.View mView;
 
-    private NewsRepository mNewsRepository;
-    private RoomRepository mRoomRepository;
+    @NonNull
+    private ActivitiesRepository mActivitiesRepository;
 
-    private String mRoomInfo;
+    @NonNull
+    private LecturesRepository mLecturesRepository;
+
 
     public DetailsPresenter(@NonNull DetailsContract.View view,
-                            @NonNull NewsRepository newsRepository,
-                            @NonNull RoomRepository roomRepository) {
+                            @NonNull ActivitiesRepository activitiesRepository) {
         this.mView = view;
-        this.mNewsRepository = newsRepository;
-        this.mRoomRepository = roomRepository;
+        mView.setPresenter(this);
+        this.mActivitiesRepository = activitiesRepository;
+
+    }
+
+    public DetailsPresenter(@NonNull DetailsContract.View view,
+                            @NonNull LecturesRepository lecturesRepository) {
+        this.mView = view;
+        mView.setPresenter(this);
+        this.mLecturesRepository = lecturesRepository;
     }
 
 
@@ -37,18 +48,14 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     }
 
     @Override
-    public String loadRoomInfo(int id) {
-        mRoomRepository.getRoomInfo(id, new RoomDataSource.LoadRoomInfoCallback() {
-            @Override
-            public void onRoomInfoLoaded(@NonNull Room room) {
-                mRoomInfo=room.getName();
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
-        return mRoomInfo;
+    public void favorite(ContentType type, int id, boolean favorite, String title) {
+        if (type == ContentType.TYPE_ACTIVITIES) {
+            L.d(LOG_TAG, "activities " + id + "  " + favorite);
+            mActivitiesRepository.favoriteItem(id, favorite, title);
+        } else if (type == ContentType.TYPE_LECTURES) {
+            L.d(LOG_TAG, "lectures " + id + "  " + favorite);
+            mLecturesRepository.favoriteItem(id, favorite, title);
+        }
     }
+
 }

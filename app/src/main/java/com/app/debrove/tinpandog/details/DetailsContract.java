@@ -2,6 +2,7 @@ package com.app.debrove.tinpandog.details;
 
 import com.app.debrove.tinpandog.BasePresenter;
 import com.app.debrove.tinpandog.BaseView;
+import com.app.debrove.tinpandog.data.ContentType;
 
 /**
  * Created by debrove on 2017/10/5.
@@ -16,6 +17,8 @@ public class DetailsContract {
     }
 
     interface Presenter extends BasePresenter {
-        String loadRoomInfo(int id);
+
+        void favorite(ContentType type, int id, boolean favorite, String title);
+
     }
 }

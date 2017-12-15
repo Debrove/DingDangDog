@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,19 +11,23 @@
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_phone_number"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:counterEnabled="true"
+            app:counterMaxLength="11">
 
             <EditText
-                android:id="@+id/user_number"
+                android:id="@+id/phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="用户名/学号"
+                android:hint="手机号"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -36,6 +41,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -47,8 +53,21 @@
                 android:inputType="textPassword" />
 
         </android.support.design.widget.TextInputLayout>
-    </LinearLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_stu_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/stu_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="学号"
+                android:inputType="number" />
+
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
     <Button
         android:layout_centerHorizontal="true"

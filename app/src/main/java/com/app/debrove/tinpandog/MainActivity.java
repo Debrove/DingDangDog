@@ -1,5 +1,6 @@
 package com.app.debrove.tinpandog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,18 +11,23 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.app.debrove.tinpandog.data.source.remote.NewsRemoteDataSource;
-import com.app.debrove.tinpandog.data.source.repository.NewsRepository;
+import com.app.debrove.tinpandog.data.source.local.ActivitiesLocalDataSource;
+import com.app.debrove.tinpandog.data.source.local.LecturesLocalDataSource;
+import com.app.debrove.tinpandog.data.source.remote.ActivitiesRemoteDataSource;
+import com.app.debrove.tinpandog.data.source.remote.LecturesRemoteDataSource;
+import com.app.debrove.tinpandog.data.source.repository.ActivitiesRepository;
+import com.app.debrove.tinpandog.data.source.repository.LecturesRepository;
+import com.app.debrove.tinpandog.favorites.FavoritesActivity;
 import com.app.debrove.tinpandog.groups.GroupsFragment;
 import com.app.debrove.tinpandog.helper.BottomNavigationViewHelper;
 import com.app.debrove.tinpandog.news.NewsFragment;
-import com.app.debrove.tinpandog.news.NewsPresenter;
 import com.app.debrove.tinpandog.schedule.ScheduleFragment;
+import com.app.debrove.tinpandog.schedule.SchedulePresenter;
 import com.app.debrove.tinpandog.user.UserFragment;
+
+import org.litepal.LitePal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +62,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initView();
         initFragments(savedInstanceState);
-        initPresenter();
+
+        new SchedulePresenter(
+                mScheduleFragment,
+                ActivitiesRepository.getInstance(ActivitiesRemoteDataSource.getInstance(),
+                        ActivitiesLocalDataSource.getInstance()),
+                LecturesRepository.getInstance(LecturesRemoteDataSource.getInstance(),
+                        LecturesLocalDataSource.getInstance()));
 
         //返回app后可以保留在上次的页面，如果为空则为首页
         if (savedInstanceState != null) {
@@ -108,11 +120,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         BottomNavigationViewHelper.disableShiftMode(mBottomNavigation);
     }
 
-    private void initPresenter() {
-        new NewsPresenter(mNewsFragment, NewsRepository.getInstance(
-                NewsRemoteDataSource.getInstance()
-        ));
-    }
 
     private void initView() {
         //设置Toolbar和DrawerLayout实现动画和联动
@@ -176,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (!mUserFragment.isAdded()) {
             fm.beginTransaction()
-                    .add(R.id.container,mUserFragment,UserFragment.class.getSimpleName())
+                    .add(R.id.container, mUserFragment, UserFragment.class.getSimpleName())
                     .commit();
         }
     }
@@ -202,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .hide(mScheduleFragment)
                     .hide(mUserFragment)
                     .commit();
-        }else if (fragment instanceof UserFragment){
+        } else if (fragment instanceof UserFragment) {
             fm.beginTransaction().show(mUserFragment)
                     .hide(mNewsFragment)
                     .hide(mScheduleFragment)
@@ -214,7 +221,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            //ToDo
+            case R.id.drawer_user:
+                //Intent intent=new Intent(this,UserInfo.class);
+                break;
+            case R.id.drawer_favorite:
+                Intent intent = new Intent(this, FavoritesActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
         return true;
     }

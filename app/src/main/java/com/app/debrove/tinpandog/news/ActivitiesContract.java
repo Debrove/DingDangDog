@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.app.debrove.tinpandog.BasePresenter;
 import com.app.debrove.tinpandog.BaseView;
-import com.app.debrove.tinpandog.data.News;
+import com.app.debrove.tinpandog.data.Activities;
+import com.app.debrove.tinpandog.data.BannerResponse;
 
 import java.util.List;
 
@@ -12,12 +13,15 @@ import java.util.List;
  * Created by debrove on 2017/7/17.
  * Package Name : com.app.debrove.tinpandog.news
  * <p>
- * 统一管理News的View和Presenter
+ * 统一管理Activities的View和Presenter
  */
 
-public interface NewsContract {
+public interface ActivitiesContract {
+
     interface View extends BaseView<Presenter> {
-        void showResult(@NonNull List<News> list);
+        void showResult(@NonNull List<Activities> list);
+
+        void showBannerImages(@NonNull List<BannerResponse.DataBean> list);
 
         boolean isActive();
 
@@ -25,6 +29,10 @@ public interface NewsContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadNews(Long date);
+        void loadNews(boolean clearCache);
+
+        void loadNewsByTime(long date);
+
+        void loadBannerUrl();
     }
 }

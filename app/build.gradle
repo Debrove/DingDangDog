@@ -2,16 +2,24 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.3'
     defaultConfig {
         applicationId "com.app.debrove.tinpandog"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        //for room scehma
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+//            }
+//        }
 
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,27 +34,37 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     //Butterknife
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+//    // Room
+//    compile 'android.arch.persistence.room:runtime:1.0.0'
+//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     //Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.android.support:design:26.0.0-alpha1'
+
+    compile 'com.android.support:design:26.1.0'
     compile 'com.github.MagicMashRoom:SuperCalendar:v1.4'
     //Bmob
-    compile 'cn.bmob.android:bmob-sdk:3.5.5'
+    //compile 'cn.bmob.android:bmob-sdk:3.5.5'
     //DatePicker
     compile('com.wdullaer:materialdatetimepicker:3.3.0') {
         exclude group: 'com.android.support'
     }
     //Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:cardview-v7:26.0.0-alpha1'
+    compile 'com.android.support:cardview-v7:26.1.0'
     //Zxing
     compile 'com.google.zxing:core:3.2.1'
     compile files('libs/hyphenatechat_3.3.4.jar')
+
+    //LitePal
+    compile 'org.litepal.android:core:1.6.0'
+
+    //Banner轮播图
+    compile 'com.bigkoo:convenientbanner:2.0.5'
 }

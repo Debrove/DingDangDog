@@ -35,10 +35,10 @@ public class SplashActivity extends AppCompatActivity {
             switch (msg.what) {
                 case StaticClass.HANDLER_SPLASH:
                     //判断程序是否是已经登录
-                    if (isLoggedIn()) {
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    } else {
+                    if (isFirst()) {
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     }
                     finish();
                     break;
@@ -47,9 +47,9 @@ public class SplashActivity extends AppCompatActivity {
     };
 
     //判断是否已经登录
-    public boolean isLoggedIn() {
-        return EMClient.getInstance().isLoggedInBefore();
-    }
+//    public boolean isLoggedIn() {
+////        return EMClient.getInstance().isLoggedInBefore();
+//    }
 
     //判断程序是否是第一次运行
     private boolean isFirst() {

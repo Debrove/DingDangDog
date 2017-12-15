@@ -1,5 +1,6 @@
 package com.app.debrove.tinpandog.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,14 +11,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.debrove.tinpandog.R;
+import com.app.debrove.tinpandog.data.LoginResponse;
+import com.app.debrove.tinpandog.data.User;
+import com.app.debrove.tinpandog.data.UserResponse;
+import com.app.debrove.tinpandog.favorites.FavoritesActivity;
+import com.app.debrove.tinpandog.retrofit.RetrofitService;
+import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.ShareUtils;
 import com.app.debrove.tinpandog.util.StaticClass;
 
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by debrove on 2017/9/28.
@@ -27,13 +46,21 @@ import butterknife.Unbinder;
 public class UserFragment extends Fragment implements UserContract.View {
 
 
+    private static final String LOG_TAG = UserFragment.class.getSimpleName();
     Unbinder unbinder;
     @BindView(R.id.toolbar_user)
     Toolbar mToolbarUser;
     @BindView(R.id.user_name)
     TextView mUserName;
+    @BindView(R.id.telephone)
+    TextView mTelephone;
 
     private DrawerLayout mDrawerLayout;
+
+    private String token;
+    private String telephone;
+    private String name = "";
+    private String stuNum = "";
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -46,8 +73,103 @@ public class UserFragment extends Fragment implements UserContract.View {
 
         unbinder = ButterKnife.bind(this, view);
         initView();
+        getUserInfoFromDB();
 
         return view;
+    }
+
+    private void getUserInfoFromDB() {
+        //获取注册或登录时输入的手机号，便于查询
+        telephone = ShareUtils.getString(getContext(), StaticClass.KEY_USER_TELEPHONE, "");
+
+        //更新用户信息
+        getUserInfoFromNetwork();
+
+        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
+        L.d(LOG_TAG, "userList" + userList);
+        for (User user : userList) {
+            name = user.getName();
+            L.d(LOG_TAG, "name " + name);
+            stuNum = user.getNumber();
+        }
+        mUserName.setText(name);
+        mTelephone.setText(telephone);
+    }
+
+
+    private void getUserInfoFromNetwork() {
+        //还要刷新token(未完成)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RetrofitService.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
+        service.getInfo(token)
+                .enqueue(new Callback<UserResponse>() {
+                    @Override
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        if (response.isSuccessful()) {
+                            String name = response.body().getData().getName();
+                            long telephone = response.body().getData().getTelephone();
+                            int stuNum = response.body().getData().getNumber();
+                            L.d("userInfo", name + telephone + stuNum);
+
+                            //通过手机号码更新用户信息
+                            User user = new User();
+                            user.setName(name);
+                            user.setNumber(String.valueOf(stuNum));
+                            user.updateAll("telephone = ?", String.valueOf(telephone));
+                        } else {
+                            L.d(LOG_TAG, "token过期或无效，获取用户信息失败");
+                            refreshToken();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        L.d(LOG_TAG, "获取用户信息失败" + t.toString());
+                        Toast.makeText(getContext(), "获取用户信息失败" + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void refreshToken() {
+        String password = "";
+        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
+        for (User user : userList) {
+            password = user.getPassword();
+        }
+
+        L.d(LOG_TAG, "telephone" + telephone + "password" + password);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RetrofitService.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
+        service.login(telephone, password)
+                .enqueue(new Callback<LoginResponse>() {
+                    @Override
+                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        if (response.isSuccessful()) {
+                            L.d(LOG_TAG, "获取token成功" + token);
+                            token = response.body().getData().getToken();
+                            L.d(LOG_TAG, "获取token成功" + token);
+                            ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
+                        } else {
+                            L.d(LOG_TAG, "获取Token失败");
+                            L.d(LOG_TAG, response.code() + "   "+response.errorBody());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        L.d(LOG_TAG, "获取Token失败");
+                    }
+                });
+
     }
 
     private void initView() {
@@ -63,7 +185,8 @@ public class UserFragment extends Fragment implements UserContract.View {
         });
         mDrawerLayout = getActivity().findViewById(R.id.drawer);
 
-        mUserName.setText(ShareUtils.getString(getContext(), StaticClass.KEY_USER_NAME,"用户名"));
+        token = ShareUtils.getString(getContext(), StaticClass.KEY_ACCESS_TOKEN, "0");
+        L.d(LOG_TAG, "token " + token);
     }
 
     @Override
@@ -75,5 +198,24 @@ public class UserFragment extends Fragment implements UserContract.View {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick({R.id.ll_favorite, R.id.ll_user_info})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ll_favorite:
+                Intent intent = new Intent(getActivity(), FavoritesActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.ll_user_info:
+                Intent intent1 = new Intent(getActivity(), UserInfoActivity.class);
+                intent1.putExtra(UserInfoActivity.KEY_USER_TELEPHONE, telephone);
+                intent1.putExtra(UserInfoActivity.KEY_USERNAME, name);
+                intent1.putExtra(UserInfoActivity.KEY_USER_STU_NUM, stuNum);
+                startActivity(intent1);
+                break;
+            default:
+                break;
+        }
     }
 }

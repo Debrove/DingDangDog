@@ -38,6 +38,18 @@ public class ShareUtils {
     }
 
     //键 值
+    public static void putLong(Context mContext, String key, long value) {
+        SharedPreferences sp = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        sp.edit().putLong(key, value).apply();
+    }
+
+    //键 默认值
+    public static Long getLong(Context mContext, String key, long defValue) {
+        SharedPreferences sp = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        return sp.getLong(key, defValue);
+    }
+
+    //键 值
     public static void putBoolean(Context mContext, String key, boolean value) {
         SharedPreferences sp = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
         sp.edit().putBoolean(key, value).apply();
