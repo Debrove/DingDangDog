@@ -81,7 +81,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="48dp"
             android:layout_marginTop="2dp"
             android:background="@color/colorBaseBackground"
             android:orientation="horizontal">
@@ -90,12 +90,12 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingEnd="3dp"
-                android:paddingStart="18dp">
+                android:paddingEnd="@dimen/primary_margin"
+                android:paddingStart="@dimen/primary_margin">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/star" />
 
@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:text="参加过的活动"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -113,8 +113,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingEnd="3dp"
-                android:paddingStart="18dp">
+                android:paddingEnd="@dimen/primary_margin"
+                android:paddingStart="@dimen/primary_margin">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:text="待评价"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -137,18 +137,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="20dp"
             android:divider="@drawable/divider"
             android:orientation="vertical"
             android:showDividers="middle">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:background="@color/colorBaseBackground"
                 android:orientation="horizontal"
-                android:paddingEnd="18dp"
-                android:paddingStart="18dp">
+                android:paddingEnd="@dimen/primary_margin"
+                android:paddingStart="@dimen/primary_margin">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -160,8 +160,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingStart="8dp"
                     android:text="名片夹"
+                    android:layout_marginStart="20dp"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -169,10 +169,11 @@
             <LinearLayout
                 android:id="@+id/ll_favorite"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:background="@color/colorBaseBackground"
                 android:orientation="horizontal"
-                android:paddingStart="18dp">
+                android:paddingStart="@dimen/primary_margin"
+                android:paddingEnd="@dimen/primary_margin">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -184,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:text="收藏"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -192,10 +193,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:background="@color/colorBaseBackground"
                 android:orientation="horizontal"
-                android:paddingStart="18dp">
+                android:paddingStart="@dimen/primary_margin"
+                android:paddingEnd="@dimen/primary_margin">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -207,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:text="活动笔记"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -218,11 +220,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="26dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
             android:background="@color/colorBaseBackground"
             android:orientation="horizontal"
-            android:paddingStart="18dp">
+            android:paddingStart="@dimen/primary_margin"
+            android:paddingEnd="@dimen/primary_margin">
 
             <ImageView
                 android:layout_width="36dp"
@@ -234,7 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingStart="8dp"
+                android:layout_marginStart="20dp"
                 android:text="设置"
                 android:textColor="@color/black"
                 android:textSize="16sp" />

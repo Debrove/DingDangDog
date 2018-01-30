@@ -132,21 +132,29 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
         if (mAdapter == null && activitiesList != null && lecturesList != null) {
             mAdapter = new FavoritesAdapter(getContext(), activitiesList, lecturesList);
+
             mAdapter.setOnItemClickListener(new OnRecyclerViewItemOnClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
                     int viewType = mAdapter.getItemViewType(position);
+//                    L.d(LOG_TAG,"name "+activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getName()+
+//                            "id "+activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getId());
                     if (viewType == FavoritesAdapter.ItemWrapper.TYPE_ACTIVITIES) {
+
                         Intent intent = new Intent(getActivity(), DetailsActivity.class);
                         //newsId为原始Id（而id为数据库重新整理后的id）
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, activitiesList.get(mAdapter.getOriginalIndex(position)).getTitle());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, activitiesList.get(mAdapter.getOriginalIndex(position)).getTime());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id());
+                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, activitiesList.get(mAdapter.getOriginalIndex(position)).getHolder());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, activitiesList.get(mAdapter.getOriginalIndex(position)).getDetail());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, activitiesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, activitiesList.get(mAdapter.getOriginalIndex(position)).isFavourite());
+
+                        String place = mAdapter.getPlace(activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
+
                         startActivity(intent);
                     } else if (viewType == FavoritesAdapter.ItemWrapper.TYPE_LECTURES) {
                         Intent intent = new Intent(getActivity(), DetailsActivity.class);
@@ -154,10 +162,13 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, lecturesList.get(mAdapter.getOriginalIndex(position)).getTitle());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, lecturesList.get(mAdapter.getOriginalIndex(position)).getTime());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, lecturesList.get(mAdapter.getOriginalIndex(position)).getPlace_id());
+                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, lecturesList.get(mAdapter.getOriginalIndex(position)).getHolder());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, lecturesList.get(mAdapter.getOriginalIndex(position)).getDetail());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, lecturesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, lecturesList.get(mAdapter.getOriginalIndex(position)).isFavorite());
+
+                        String place = mAdapter.getPlace(lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
                         startActivity(intent);
                     }
                 }

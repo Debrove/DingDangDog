@@ -1,10 +1,13 @@
 package com.app.debrove.tinpandog.news;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.app.debrove.tinpandog.data.BannerResponse;
 import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.data.source.datasource.LecturesDataSource;
 import com.app.debrove.tinpandog.data.source.repository.LecturesRepository;
+import com.app.debrove.tinpandog.util.L;
 
 import java.util.List;
 
@@ -19,12 +22,12 @@ public class LecturesPresenter implements LecturesContract.Presenter {
     private final LecturesContract.View mView;
 
     @NonNull
-    private final LecturesRepository mRepository;
+    private final LecturesRepository mLecturesRepository;
 
     public LecturesPresenter(@NonNull LecturesContract.View mView,
-                             @NonNull LecturesRepository mRepository) {
+                             @NonNull LecturesRepository lecturesRepository) {
         this.mView = mView;
-        this.mRepository = mRepository;
+        this.mLecturesRepository = lecturesRepository;
         this.mView.setPresenter(this);
     }
 
@@ -34,8 +37,8 @@ public class LecturesPresenter implements LecturesContract.Presenter {
     }
 
     @Override
-    public void loadNews(Long date, boolean clearCache) {
-        mRepository.getNews(clearCache, date, new LecturesDataSource.LoadNewsCallback() {
+    public void loadNews(boolean clearCache) {
+        mLecturesRepository.getNews(clearCache, new LecturesDataSource.LoadNewsCallback() {
             @Override
             public void onNewsLoaded(@NonNull List<Lectures> list) {
                 if (mView.isActive()) {
@@ -46,9 +49,50 @@ public class LecturesPresenter implements LecturesContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
-
+                if (mView.isActive()) {
+                    mView.setLoadingIndicator(false);
+                }
             }
         });
+    }
 
+    @Override
+    public void loadNewsByTime(long date) {
+        mLecturesRepository.getNewsByTime(date, new LecturesDataSource.LoadNewsCallback() {
+            @Override
+            public void onNewsLoaded(@NonNull List<Lectures> lecturesList) {
+                if (mView.isActive()) {
+                    mView.showResult(lecturesList);
+                    mView.setLoadingIndicator(false);
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                if (mView.isActive()) {
+                    mView.setLoadingIndicator(false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void loadBannerUrl() {
+        mLecturesRepository.getImagesUrl(new LecturesDataSource.LoadBannerImagesCallback() {
+            @Override
+            public void onUrlLoaded(@NonNull List<BannerResponse.DataBean> list) {
+                if (mView.isActive()) {
+                    mView.showBannerImages(list);
+                    mView.setLoadingIndicator(false);
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                if (mView.isActive()) {
+                    mView.setLoadingIndicator(false);
+                }
+            }
+        });
     }
 }

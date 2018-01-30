@@ -14,12 +14,11 @@ public class User extends DataSupport {
     @Column(unique = true)
     private String telephone;//电话
 
-    @Column(unique = true)
     private String number;//学号
 
     private String name;//姓名
 
-    @Encrypt(algorithm = MD5)
+    @Encrypt(algorithm = AES)
     private String password;//密码
 
     public String getTelephone() {

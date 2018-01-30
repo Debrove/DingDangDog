@@ -25,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String KEY_ARTICLE_TITLE = "KEY_ARTICLE_TITLE";
     public static final String KEY_ARTICLE_TIME = "KEY_ARTICLE_TIME";
     public static final String KEY_ARTICLE_PLACE = "KEY_ARTICLE_PLACE";
+    public static final String KEY_ARTICLE_HOLDER = "KEY_ARTICLE_HOLDER";
     public static final String KEY_ARTICLE_CONTENT = "KEY_ARTICLE_CONTENT";
     public static final String KEY_ARTICLE_IMAGE = "KEY_ARTICLE_IMAGE";
     public static final String KEY_COUNT_PRE_SIGN_UP = "KEY_COUNT_PRE_SIGN_UP";
@@ -66,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ActivitiesRepository.destroyInstance();
+        LecturesRepository.destroyInstance();
     }
 
     @Override

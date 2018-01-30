@@ -31,6 +31,7 @@ import com.ldf.calendar.view.Calendar;
 import com.ldf.calendar.view.MonthPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -83,6 +84,10 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     private ArrayList<Calendar> currentCalendars = new ArrayList<>();
     private CalendarDate currentDate;
 
+    private List<Activities> mActivitiesList;
+
+    private List<Lectures> mLecturesList;
+
     Unbinder unbinder;
 
     public static ScheduleFragment newInstance() {
@@ -117,6 +122,9 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
                 setLoadingIndicator(false);
             }
         });
+
+        mPresenter.loadAll();
+
     }
 
     @Override
@@ -129,6 +137,10 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         L.d(LOG_TAG, activitiesList + " " + lecturesList);
 
         if (mAdapter == null && activitiesList != null && lecturesList != null) {
+            L.d(LOG_TAG, activitiesList + " 1 " + lecturesList);
+            mActivitiesList = activitiesList;
+            mLecturesList = lecturesList;
+
             mAdapter = new ScheduleAdapter(getContext(), activitiesList, lecturesList);
 
             mRecyclerView.setAdapter(mAdapter);
@@ -137,6 +149,19 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         }
         mRecyclerView.setVisibility(activitiesList.isEmpty() && lecturesList.isEmpty() ? View.GONE : View.VISIBLE);
         mEmptyView.setVisibility(activitiesList.isEmpty() && lecturesList.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void getAllList(List<Activities> activitiesList, List<Lectures> lecturesList) {
+        if (activitiesList != null) {
+            mActivitiesList = activitiesList;
+        }
+
+        if (lecturesList != null) {
+            mLecturesList = lecturesList;
+        }
+
+        L.d(LOG_TAG,"list all "+mActivitiesList+ " "+ mLecturesList);
     }
 
     public void showCalendarView() {
@@ -157,14 +182,12 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         mShowYearView.setText(currentDate.getYear() + "年");
         mShowMonthView.setText(currentDate.getMonth() + "");
         mShowDayView.setText(currentDate.getDay() + "日");
-//        mCardShowMonthView.setText(currentDate.getMonth() + "");
-//        mCardShowDayView.setText(currentDate.getDay() + "日");
 
         final Long date = DateFormatUtils.formatNewsDateStringToLong(currentDate.toString());
+        L.d(LOG_TAG," currentDate "+date + " "+currentDate);
 
         L.d(LOG_TAG, "refresh in showCalendarDate() " + date);
         mPresenter.loadList(date);
-
     }
 
 
@@ -188,10 +211,9 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         mShowYearView.setText(date.getYear() + "年");
         mShowMonthView.setText(date.getMonth() + "");
         mShowDayView.setText(date.getDay() + "日");
-//        mCardShowMonthView.setText(date.getMonth() + "");
-//        mCardShowDayView.setText(date.getDay() + "日");
 
         final Long time = DateFormatUtils.formatNewsDateStringToLong(date.toString());
+        L.d(LOG_TAG,"click date "+time+" "+date);
 
         L.d(LOG_TAG, "refresh in refreshClickDate() " + date);
         mPresenter.loadList(time);
@@ -241,12 +263,43 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     }
 
     private void initMarkData() {
-//        HashMap markData = new HashMap<>();
+        currentDate=new CalendarDate();
+
+        HashMap markData = new HashMap<>();
+
+        String time,time2;
+        long time1,currentDate1;
+        currentDate1=DateFormatUtils.formatNewsDateStringToLong(currentDate.toString());
+
         //0表示红点，1表示灰点
-//        markData.put("2017-10-6" , "1");
-//        markData.put("2017-10-7" , "0");
-//        markData.put("2017-10-9" , "0");
-//        calendarAdapter.setMarkData(markData);
+        L.d(LOG_TAG, "markData " + mActivitiesList);
+        for (Activities item:mActivitiesList) {
+            time=item.getTime();
+            time1=DateFormatUtils.formatNewsDateStringToLong(time);
+            time2=DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
+
+            if (time1-currentDate1>=0){
+                markData.put(time2,"0");
+            }else {
+                markData.put(time2,"1");
+            }
+            L.d(LOG_TAG," time "+ time +" time2 "+time2+" currentDate1 "+currentDate1);
+        }
+
+        for (Lectures item:mLecturesList) {
+            time=item.getTime();
+            time1=DateFormatUtils.formatNewsDateStringToLong(time);
+            time2=DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
+
+            if (time1-currentDate1>=0){
+                markData.put(time2,"0");
+            }else {
+                markData.put(time2,"1");
+            }
+            L.d(LOG_TAG," time "+ time +" time2 "+time2);
+        }
+
+        calendarAdapter.setMarkData(markData);
     }
 
     @Override
@@ -285,6 +338,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
             }
         });
     }
+
 
     //    //回到今天
 //    private void onClickBackToDayBtn() {

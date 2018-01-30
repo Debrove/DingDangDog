@@ -2,10 +2,11 @@
 <litepal>
     <dbname value="Dog4"></dbname>
 
-    <version value="8"></version>
+    <version value="14"></version>
     <list>
         <mapping class="com.app.debrove.tinpandog.data.Activities"></mapping>
         <mapping class="com.app.debrove.tinpandog.data.Lectures"></mapping>
         <mapping class="com.app.debrove.tinpandog.data.User"></mapping>
+        <mapping class="com.app.debrove.tinpandog.data.Place"></mapping>
     </list>
 </litepal>

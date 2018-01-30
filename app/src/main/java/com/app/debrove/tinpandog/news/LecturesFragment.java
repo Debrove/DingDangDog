@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.debrove.tinpandog.R;
+import com.app.debrove.tinpandog.data.BannerResponse;
 import com.app.debrove.tinpandog.data.ContentType;
 import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.details.DetailsActivity;
@@ -32,6 +33,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -70,12 +72,7 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
     private boolean mIsFirstLoad = true;
     private int mListSize = 0;
 
-    private List<String> networkImages;
-    private String[] images = {
-            "http://www.8kmm.com/UploadFiles/2012/8/201208140920132659.jpg",
-            "http://f.hiphotos.baidu.com/image/h%3D200/sign=1478eb74d5a20cf45990f9df460b4b0c/d058ccbf6c81800a5422e5fdb43533fa838b4779.jpg",
-            "http://f.hiphotos.baidu.com/image/pic/item/09fa513d269759ee50f1971ab6fb43166c22dfba.jpg"
-    };
+    private List<String> networkImages=new ArrayList<>();
 
     public LecturesFragment() {
     }
@@ -103,7 +100,8 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
             public void onRefresh() {
                 Calendar c = Calendar.getInstance();
                 c.setTimeZone(TimeZone.getTimeZone("GMT+08"));
-                mPresenter.loadNews(c.getTimeInMillis(), true);
+                mPresenter.loadNews(true);
+                mPresenter.loadBannerUrl();
                 mRefreshLayout.setRefreshing(false);
             }
         });
@@ -135,17 +133,6 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
         convenientBanner.setLayoutParams(
                 new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         getActivity().getWindowManager().getDefaultDisplay().getHeight() / 4));
-        networkImages = Arrays.asList(images);
-        convenientBanner.setPages(
-                new CBViewHolderCreator<NetWorkImageHolderView>() {
-                    @Override
-                    public NetWorkImageHolderView createHolder() {
-                        return new NetWorkImageHolderView();
-                    }
-                }, networkImages)
-                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
-                .setPageIndicator(new int[]{R.drawable.banner_header_indicator_unselected, R.drawable.banner_header_indicator_selected})
-                .setScrollDuration(3000);
     }
 
     //获取轮播图
@@ -209,20 +196,24 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, list.get(pos).getTitle());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, list.get(pos).getTime());
-                    intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, list.get(pos).getPlace_id());
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, list.get(pos).getPlace_id().getName());
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER,list.get(pos).getHolder());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, list.get(pos).getDetail());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, list.get(pos).getPhoto_url());
 
                     //查询对应新闻的favorite
-                    List<Lectures> activities = DataSupport.select("favorite")
+                    List<Lectures> activities = DataSupport.select("favorite","pre_sign_up")
                             .where("newsId = ?", String.valueOf(list.get(pos).getNewsId()))
                             .find(Lectures.class);
                     boolean isFavorite = false;
+                    boolean isPreSignUp = false;
                     for (Lectures item : activities) {
                         isFavorite = item.isFavorite();
+                        isPreSignUp = item.isPre_sign_up();
                         L.d(LOG_TAG, "isFavorite" + isFavorite);
                     }
-                    intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, list.get(pos).isFavorite());
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, isFavorite);
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_PRE_SIGN_UP, isPreSignUp);
                     startActivity(intent);
                 }
             });
@@ -232,6 +223,34 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
         }
         mAdapter.addHeaderView(convenientBanner);
         mEmptyView.setVisibility(list.isEmpty() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void showBannerImages(@NonNull List<BannerResponse.DataBean> list) {
+        if (list.isEmpty()) {
+            for (BannerResponse.DataBean url : list) {
+                L.d(LOG_TAG, url.getPhoto_url());
+                networkImages.add(url.getPhoto_url());
+            }
+        } else {
+            //updateImages
+            networkImages.clear();
+            for (BannerResponse.DataBean url : list) {
+                L.d(LOG_TAG, "update" + url.getPhoto_url());
+                networkImages.add(url.getPhoto_url());
+            }
+        }
+
+        convenientBanner.setPages(
+                new CBViewHolderCreator<NetWorkImageHolderView>() {
+                    @Override
+                    public NetWorkImageHolderView createHolder() {
+                        return new NetWorkImageHolderView();
+                    }
+                }, networkImages)
+                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
+                .setPageIndicator(new int[]{R.drawable.banner_header_indicator_unselected, R.drawable.banner_header_indicator_selected})
+                .setScrollDuration(3000);
     }
 
     @Override
@@ -248,11 +267,12 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
         c.set(mYear, mMonth, mDay);
         setLoadingIndicator(mIsFirstLoad);
         if (mIsFirstLoad) {
-            mPresenter.loadNews(c.getTimeInMillis(), false);
+            mPresenter.loadNews(true);
             mIsFirstLoad = false;
         } else {
-            mPresenter.loadNews(c.getTimeInMillis(), false);
+            mPresenter.loadNews(true);
         }
+        mPresenter.loadBannerUrl();
     }
 
     @Override
@@ -276,7 +296,7 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
                 mDay = dayOfMonth;
                 c.set(mYear, monthOfYear, mDay);
 
-                mPresenter.loadNews(c.getTimeInMillis(), true);
+                mPresenter.loadNewsByTime(c.getTimeInMillis());
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
@@ -295,7 +315,7 @@ public class LecturesFragment extends Fragment implements LecturesContract.View 
     private void loadMore() {
         Calendar c = Calendar.getInstance();
         c.set(mYear, mMonth, --mDay);
-        mPresenter.loadNews(c.getTimeInMillis(), false);
+        mPresenter.loadNewsByTime(c.getTimeInMillis());
     }
 
     @Override

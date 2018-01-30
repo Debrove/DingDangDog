@@ -40,13 +40,12 @@ dependencies {
     //Butterknife
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-//    // Room
-//    compile 'android.arch.persistence.room:runtime:1.0.0'
-//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    //    // Room
+    //    compile 'android.arch.persistence.room:runtime:1.0.0'
+    //    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     //Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-
     compile 'com.android.support:design:26.1.0'
     compile 'com.github.MagicMashRoom:SuperCalendar:v1.4'
     //Bmob
@@ -61,10 +60,11 @@ dependencies {
     //Zxing
     compile 'com.google.zxing:core:3.2.1'
     compile files('libs/hyphenatechat_3.3.4.jar')
-
     //LitePal
     compile 'org.litepal.android:core:1.6.0'
-
     //Banner轮播图
     compile 'com.bigkoo:convenientbanner:2.0.5'
+
+
+    implementation 'com.android.support:support-v4:26.1.0'
 }

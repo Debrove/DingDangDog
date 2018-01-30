@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.app.debrove.tinpandog.BasePresenter;
 import com.app.debrove.tinpandog.BaseView;
+import com.app.debrove.tinpandog.data.BannerResponse;
 import com.app.debrove.tinpandog.data.Lectures;
 
 import java.util.List;
@@ -18,13 +19,19 @@ public interface LecturesContract {
     interface View extends BaseView<Presenter> {
         void showResult(@NonNull List<Lectures> list);
 
+        void showBannerImages(@NonNull List<BannerResponse.DataBean> list);
+
         boolean isActive();
 
         void setLoadingIndicator(boolean active);
     }
 
     interface Presenter extends BasePresenter {
-        void loadNews(Long date, boolean clearCache);
+        void loadNews(boolean clearCache);
+
+        void loadNewsByTime(long date);
+
+        void loadBannerUrl();
     }
 
 }

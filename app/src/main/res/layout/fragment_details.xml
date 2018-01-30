@@ -86,7 +86,7 @@
                         android:layout_marginStart="6dp"
                         android:text="2017-12-10"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -110,7 +110,7 @@
                         android:maxLines="2"
                         android:text="行政楼会议室"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -134,7 +134,7 @@
                         android:maxLines="2"
                         android:text="暨南大学学生会"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -148,7 +148,7 @@
                 android:paddingBottom="24dp"
                 android:text="text"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -184,7 +184,6 @@
                 android:id="@+id/favourite"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:gravity="center"

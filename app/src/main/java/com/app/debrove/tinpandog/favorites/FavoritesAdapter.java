@@ -13,10 +13,13 @@ import android.widget.TextView;
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.Activities;
 import com.app.debrove.tinpandog.data.Lectures;
+import com.app.debrove.tinpandog.data.Place;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
 import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.StaticClass;
 import com.squareup.picasso.Picasso;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,10 +114,11 @@ class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 //L.d(LOG_TAG, "position" + position + "index" + iw.index);
 
                 viewHolder.textView.setText(item.getTitle());
-                String imgUrl = StaticClass.HEADER_IMG_URL + item.getPhoto_url();
+//                String imgUrl = StaticClass.HEADER_IMG_URL + item.getPhoto_url();
+                L.d(LOG_TAG,item.getPhoto_url());
 
                 Picasso.with(mContext)
-                        .load(imgUrl)
+                        .load(item.getPhoto_url())
                         .placeholder(R.drawable.placeholder)
                         .into(viewHolder.imageView);
                 break;
@@ -124,10 +128,11 @@ class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Lectures item1 = mLecturesList.get(iw.index);
 
                 viewHolder1.textView.setText(item1.getTitle());
-                String imgUrl1 = StaticClass.HEADER_IMG_URL + item1.getPhoto_url();
+//                String imgUrl1 = StaticClass.HEADER_IMG_URL + item1.getPhoto_url();
+                L.d(LOG_TAG,item1.getPhoto_url());
 
                 Picasso.with(mContext)
-                        .load(imgUrl1)
+                        .load(item1.getPhoto_url())
                         .placeholder(R.drawable.placeholder)
                         .into(viewHolder1.imageView);
                 break;
@@ -271,6 +276,17 @@ class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 listener.onItemClick(itemView, getLayoutPosition());
             }
         }
+    }
+
+    public String getPlace(int id){
+        String name="未知";
+        List<Place> list= DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
+        L.d(LOG_TAG,"list "+list+ "size "+list.size());
+        for (Place place1:list){
+            name= place1.getName();
+            L.d(LOG_TAG," name "+name);
+        }
+        return name;
     }
 }
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.Activities;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
+import com.app.debrove.tinpandog.util.DateFormatUtils;
 import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.StaticClass;
 import com.squareup.picasso.Picasso;
@@ -70,21 +71,28 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        String time;
+        long time1;
+
         if (holder instanceof ItemViewHolder) {
             Activities item = getItem(position);
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
             viewHolder.title.setText(item.getTitle());
-            viewHolder.date.setText(item.getTime());
 
-            String imgUrl = StaticClass.HEADER_IMG_URL + item.getPhoto_url();
-            //L.d("imgurl", imgUrl);
+            time = item.getTime();
+            time1 = DateFormatUtils.formatNewsDateStringToLong(time);
+            viewHolder.date.setText(DateFormatUtils.formatNewsDateLongToString(time1));
+
+//            String imgUrl = StaticClass.HEADER_IMG_URL + item.getPhoto_url();
+            L.d("imgurl activities ", item.getPhoto_url());
 
             Picasso.with(mContext)
-                    .load(imgUrl)
+                    .load(item.getPhoto_url())
                     .placeholder(R.drawable.placeholder)
                     .into(viewHolder.itemImg);
-        }else if (holder instanceof HeaderViewHolder){
+            viewHolder.itemImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        } else if (holder instanceof HeaderViewHolder) {
         }
     }
 

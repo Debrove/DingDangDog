@@ -59,6 +59,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_isStarted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -178,8 +179,7 @@
             <Button
                 android:id="@+id/btn_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_height="48dp"
                 android:background="@color/white"
                 android:text="@string/tv_comment"
                 android:textColor="@color/colorPrimary"
@@ -189,8 +189,10 @@
             <Button
                 android:id="@+id/btn_share"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:background="@color/white"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:text="@string/tv_share"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/body_text_size"

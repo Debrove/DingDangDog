@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.LoginResponse;
 import com.app.debrove.tinpandog.data.User;
-import com.app.debrove.tinpandog.data.UserResponse;
 import com.app.debrove.tinpandog.favorites.FavoritesActivity;
 import com.app.debrove.tinpandog.retrofit.RetrofitService;
 import com.app.debrove.tinpandog.util.L;
@@ -24,7 +23,6 @@ import com.app.debrove.tinpandog.util.ShareUtils;
 import com.app.debrove.tinpandog.util.StaticClass;
 
 import org.litepal.crud.DataSupport;
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.util.List;
 
@@ -45,8 +43,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserFragment extends Fragment implements UserContract.View {
 
-
     private static final String LOG_TAG = UserFragment.class.getSimpleName();
+
+    private UserContract.Presenter mPresenter;
+
     Unbinder unbinder;
     @BindView(R.id.toolbar_user)
     Toolbar mToolbarUser;
@@ -73,14 +73,47 @@ public class UserFragment extends Fragment implements UserContract.View {
 
         unbinder = ButterKnife.bind(this, view);
         initView();
-        getUserInfoFromDB();
+        //getUserInfoFromDB();
+        //获取用户信息
+        mPresenter.loadUserInfo(telephone, token);
 
         return view;
     }
 
-    private void getUserInfoFromDB() {
+
+    @Override
+    public void showInfo(List<User> userInfo) {
+
+        L.d(LOG_TAG, "userinfo " + userInfo);
+
+            for (User user : userInfo) {
+                name = user.getName();
+                stuNum = user.getNumber();
+            }
+            L.d(LOG_TAG,"name "+name);
+            mTelephone.setText(telephone);
+            mUserName.setText(name);
+            ShareUtils.putString(getContext(),StaticClass.KEY_USERNAME,name);
+            ShareUtils.putString(getContext(),StaticClass.KEY_STU_NUM,stuNum);
+    }
+
+    @Override
+    public void getToken(String token) {
+        //刷新token
+        L.d(LOG_TAG," new token "+token);
+        ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
+    }
+
+    @Override
+    public void refreshToken() {
+        mPresenter.refreshToken(telephone);
+        mPresenter.loadUserInfo(telephone,token);
+        L.d(LOG_TAG,"token in refreshing "+token);
+    }
+
+/*    private void getUserInfoFromDB() {
         //获取注册或登录时输入的手机号，便于查询
-        telephone = ShareUtils.getString(getContext(), StaticClass.KEY_USER_TELEPHONE, "");
+
 
         //更新用户信息
         getUserInfoFromNetwork();
@@ -94,83 +127,85 @@ public class UserFragment extends Fragment implements UserContract.View {
         }
         mUserName.setText(name);
         mTelephone.setText(telephone);
-    }
+    }*/
 
 
-    private void getUserInfoFromNetwork() {
-        //还要刷新token(未完成)
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitService.URL_BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    //private void getUserInfoFromNetwork() {
+    //还要刷新token
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(RetrofitService.URL_BASE)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
+//        service.getInfo(token)
+//                .enqueue(new Callback<UserResponse>() {
+//                    @Override
+//                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+//                        if (response.isSuccessful()) {
+//                            String name = response.body().getData().getName();
+//                            long telephone = response.body().getData().getTelephone();
+//                            int stuNum = response.body().getData().getNumber();
+//                            L.d("userInfo", name + telephone + stuNum);
+//
+//                            //通过手机号码更新用户信息
+//                            User user = new User();
+//                            user.setName(name);
+//                            user.setNumber(String.valueOf(stuNum));
+//                            user.updateAll("telephone = ?", String.valueOf(telephone));
+//                            mUserName.setText(name);
+//                            //refreshToken();(测试刷新token)
+//                        } else {
+//                            L.d(LOG_TAG, "token过期或无效，获取用户信息失败");
+//                            refreshToken();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<UserResponse> call, Throwable t) {
+//                        L.d(LOG_TAG, "获取用户信息失败" + t.toString());
+//                        Toast.makeText(getContext(), "获取用户信息失败" + t.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+    // }
 
-        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
-        service.getInfo(token)
-                .enqueue(new Callback<UserResponse>() {
-                    @Override
-                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                        if (response.isSuccessful()) {
-                            String name = response.body().getData().getName();
-                            long telephone = response.body().getData().getTelephone();
-                            int stuNum = response.body().getData().getNumber();
-                            L.d("userInfo", name + telephone + stuNum);
-
-                            //通过手机号码更新用户信息
-                            User user = new User();
-                            user.setName(name);
-                            user.setNumber(String.valueOf(stuNum));
-                            user.updateAll("telephone = ?", String.valueOf(telephone));
-                        } else {
-                            L.d(LOG_TAG, "token过期或无效，获取用户信息失败");
-                            refreshToken();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserResponse> call, Throwable t) {
-                        L.d(LOG_TAG, "获取用户信息失败" + t.toString());
-                        Toast.makeText(getContext(), "获取用户信息失败" + t.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void refreshToken() {
-        String password = "";
-        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
-        for (User user : userList) {
-            password = user.getPassword();
-        }
-
-        L.d(LOG_TAG, "telephone" + telephone + "password" + password);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitService.URL_BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
-        service.login(telephone, password)
-                .enqueue(new Callback<LoginResponse>() {
-                    @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()) {
-                            L.d(LOG_TAG, "获取token成功" + token);
-                            token = response.body().getData().getToken();
-                            L.d(LOG_TAG, "获取token成功" + token);
-                            ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
-                        } else {
-                            L.d(LOG_TAG, "获取Token失败");
-                            L.d(LOG_TAG, response.code() + "   "+response.errorBody());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        L.d(LOG_TAG, "获取Token失败");
-                    }
-                });
-
-    }
+//    private void refreshToken() {
+//        String password = "";
+//        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
+//        for (User user : userList) {
+//            password = user.getPassword();
+//        }
+//
+//        L.d(LOG_TAG, "telephone" + telephone + "password" + password);
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(RetrofitService.URL_BASE)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
+//        service.login(telephone, password)
+//                .enqueue(new Callback<LoginResponse>() {
+//                    @Override
+//                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+//                        if (response.isSuccessful()) {
+//                            L.d(LOG_TAG, "旧token" + token);
+//                            token = response.body().getData().getToken();
+//                            L.d(LOG_TAG, "获取token成功" + token);
+//                            ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
+//                        } else {
+//                            L.d(LOG_TAG, "获取Token失败");
+//                            L.d(LOG_TAG, response.code() + "   " + response.errorBody());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<LoginResponse> call, Throwable t) {
+//                        L.d(LOG_TAG, "获取Token失败");
+//                    }
+//                });
+//
+//    }
 
     private void initView() {
         //Toolbar
@@ -186,12 +221,16 @@ public class UserFragment extends Fragment implements UserContract.View {
         mDrawerLayout = getActivity().findViewById(R.id.drawer);
 
         token = ShareUtils.getString(getContext(), StaticClass.KEY_ACCESS_TOKEN, "0");
-        L.d(LOG_TAG, "token " + token);
+        telephone = ShareUtils.getString(getContext(), StaticClass.KEY_USER_TELEPHONE, "");
+
+        L.d(LOG_TAG, "telephone " + telephone + " token " + token);
     }
 
     @Override
     public void setPresenter(UserContract.Presenter presenter) {
-
+        if (presenter != null) {
+            mPresenter = presenter;
+        }
     }
 
     @Override
@@ -217,5 +256,11 @@ public class UserFragment extends Fragment implements UserContract.View {
             default:
                 break;
         }
+    }
+
+
+    @Override
+    public boolean isActive() {
+        return isAdded() && isResumed();
     }
 }

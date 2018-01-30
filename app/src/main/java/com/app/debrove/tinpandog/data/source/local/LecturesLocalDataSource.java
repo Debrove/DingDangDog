@@ -38,7 +38,16 @@ public class LecturesLocalDataSource implements LecturesDataSource {
     }
 
     @Override
-    public void getNews(boolean clearCache, long date, @NonNull LoadNewsCallback callback) {
+    public void getNewsByTime(long date, @NonNull LoadNewsCallback callback) {
+        String time = DateFormatUtils.formatNewsDateLongToString(date);
+        L.d(LOG_TAG, " time " + time + " " + date);
+        List<Lectures> lecturesByTime = DataSupport.where("time = ?", time).find(Lectures.class);
+        L.d(LOG_TAG, "by time " + lecturesByTime);
+        callback.onNewsLoaded(lecturesByTime);
+    }
+
+    @Override
+    public void getNews(boolean clearCache, @NonNull LoadNewsCallback callback) {
         List<Lectures> allLectures = DataSupport.findAll(Lectures.class);
         callback.onNewsLoaded(allLectures);
         L.d(LOG_TAG, "get news in local" + allLectures);
@@ -51,6 +60,13 @@ public class LecturesLocalDataSource implements LecturesDataSource {
         List<Lectures> lectures = DataSupport.where("pre_sign_up = ? and time = ?", "1", time).find(Lectures.class);
         callback.onNewsLoaded(lectures);
         L.d(LOG_TAG, "getNewsSignedUp " + lectures);
+    }
+
+    @Override
+    public void getAllNewsSignedUp(@NonNull LoadNewsCallback callback) {
+        List<Lectures> allLecturesSignedUp=DataSupport.where("pre_sign_up = ?","1").find(Lectures.class);
+        callback.onNewsLoaded(allLecturesSignedUp);
+        L.d(LOG_TAG," all signed up "+allLecturesSignedUp);
     }
 
     @Override
@@ -79,7 +95,7 @@ public class LecturesLocalDataSource implements LecturesDataSource {
     }
 
     @Override
-    public void signUpItem(int itemId, boolean signUp, String token) {
+    public void signUpItem(int itemId, boolean signUp, String token, LoadMessageCallback callback) {
         L.d(LOG_TAG, "itemId" + itemId + " " + signUp + " token " + token);
         Lectures lecturesToUpdate = new Lectures();
         lecturesToUpdate.setPre_sign_up(true);
@@ -99,6 +115,16 @@ public class LecturesLocalDataSource implements LecturesDataSource {
                 L.d(LOG_TAG, "save all success" + success);
             }
         });
+    }
+
+    @Override
+    public void getImagesUrl(@NonNull LoadBannerImagesCallback callback) {
+
+    }
+
+    @Override
+    public void refreshToken(String telephone, LoadTokenCallback callback) {
+
     }
 
     public static void destroyInstance() {

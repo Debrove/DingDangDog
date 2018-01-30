@@ -26,6 +26,8 @@ public interface ActivitiesContract {
         boolean isActive();
 
         void setLoadingIndicator(boolean active);
+
+        void setToast(String message);
     }
 
     interface Presenter extends BasePresenter {
@@ -34,5 +36,6 @@ public interface ActivitiesContract {
         void loadNewsByTime(long date);
 
         void loadBannerUrl();
+
     }
 }

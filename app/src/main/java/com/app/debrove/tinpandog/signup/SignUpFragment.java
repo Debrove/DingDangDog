@@ -19,35 +19,24 @@ import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.ShareUtils;
 import com.app.debrove.tinpandog.util.StaticClass;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * Created by debrove on 2017/12/13.
  * Package Name : com.app.debrove.tinpandog.signup
  */
 
-public class SignUpFragment extends Fragment implements SignUpContract.View {
+public class SignUpFragment extends Fragment implements SignUpContract.View, View.OnClickListener {
 
     private static final String LOG_TAG = SignUpFragment.class.getSimpleName();
 
-    //@BindView(R.id.toolbar)
     private Toolbar mToolbar;
-    //@BindView(R.id.tv_title)
     private TextView mTvTitle;
-    //@BindView(R.id.tv_time)
     private TextView mTvTime;
-    @BindView(R.id.et_username)
-    EditText mEtUsername;
-    @BindView(R.id.et_telephone)
-    EditText mEtTelephone;
-    @BindView(R.id.et_stu_num)
-    EditText mEtStuNum;
-    Unbinder unbinder;
-    //@BindView(R.id.btn_confirm_info)
+    private EditText mEtUsername;
+    private EditText mEtTelephone;
+    private EditText mEtStuNum;
     private Button mBtnConfirmInfo;
+    private Button mBtnBack;
 
     private SignUpContract.Presenter mPresenter;
 
@@ -55,6 +44,9 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
     private String token;
     private String mTitle;
     private String mTime;
+    private String mTelephone;
+    private String mUsername;
+    private String mStuNum;
     private int mId;
 
     private boolean isPreSignUp;
@@ -76,6 +68,10 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         mTime = getActivity().getIntent().getStringExtra(SignUpActivity.KEY_ARTICLE_TIME);
         mId = getActivity().getIntent().getIntExtra(SignUpActivity.KEY_ARTICLE_ID, -1);
         isPreSignUp = getActivity().getIntent().getBooleanExtra(SignUpActivity.KEY_ARTICLE_IS_PRE_SIGN_UP, false);
+
+        mTelephone = ShareUtils.getString(getContext(), StaticClass.KEY_USER_TELEPHONE, "");
+        mUsername = ShareUtils.getString(getContext(), StaticClass.KEY_USERNAME, "");
+        mStuNum = ShareUtils.getString(getContext(), StaticClass.KEY_STU_NUM, "");
     }
 
     @Nullable
@@ -85,7 +81,6 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
 
         initView(view);
 
-        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -94,23 +89,40 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         mTvTitle = v.findViewById(R.id.tv_title);
         mTvTime = v.findViewById(R.id.tv_time);
         mBtnConfirmInfo = v.findViewById(R.id.btn_confirm_info);
+        mBtnBack = v.findViewById(R.id.btn_back);
+        mEtTelephone = v.findViewById(R.id.et_telephone);
+        mEtUsername = v.findViewById(R.id.et_username);
+        mEtStuNum = v.findViewById(R.id.et_stu_num);
 
         setHasOptionsMenu(true);
         SignUpActivity activity = (SignUpActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        L.d(LOG_TAG, "telephone " + mTelephone + "username " + mUsername + "num " + mStuNum);
         mTvTitle.setText(mTitle);
         mTvTime.setText(mTime);
+        mEtTelephone.setText(mTelephone);
+        mEtUsername.setText(mUsername);
+        mEtTelephone.setEnabled(false);
+
+        //学号可为空
+        if (mStuNum != null) {
+            mEtStuNum.setText(mStuNum);
+        }
+
         if (isPreSignUp) {
             mBtnConfirmInfo.setEnabled(false);
             mBtnConfirmInfo.setText("预报名成功");
         }
+
+        mBtnConfirmInfo.setOnClickListener(this);
+        mBtnBack.setOnClickListener(this);
     }
 
-    @OnClick({R.id.btn_back, R.id.btn_confirm_info})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btn_back:
                 getActivity().onBackPressed();
                 break;
@@ -119,12 +131,40 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
                 if (!isPreSignUp) {
                     isPreSignUp = true;
                     mPresenter.updateSignUpInfo(mType, mId, isPreSignUp, token);
-                    Toast.makeText(getContext(), "预报名成功", Toast.LENGTH_SHORT).show();
-                    mBtnConfirmInfo.setEnabled(false);
-                    mBtnConfirmInfo.setText("预报名成功");
                 }
                 break;
         }
+    }
+
+    @Override
+    public void showSignUpMessage(String message) {
+        if (message.equals("报名成功")) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            mBtnConfirmInfo.setEnabled(false);
+            mBtnConfirmInfo.setText("预报名成功");
+        } else {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void getToken(String token) {
+        //刷新token
+        L.d(LOG_TAG, " new token " + token);
+        ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
+    }
+
+    @Override
+    public void refreshToken() {
+        mPresenter.refreshToken(mType, mTelephone);
+        L.d(LOG_TAG, "token in refreshing " + token);
+    }
+
+    @Override
+    public void refreshSignUp(String token) {
+        L.d(LOG_TAG, " token " + token);
+        mPresenter.updateSignUpInfo(mType, mId, isPreSignUp, token);
     }
 
     @Override
@@ -150,9 +190,11 @@ public class SignUpFragment extends Fragment implements SignUpContract.View {
         return isAdded() && isResumed();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
+
+
 }

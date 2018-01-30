@@ -87,6 +87,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     private String mTitle;
     private String mTime;
     private String mPlace;
+    private String mHolder;
     private String mContent;
     private String mImage;
     private String imageUrl;
@@ -108,12 +109,13 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         mTitle = getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_TITLE);
         mTime = getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_TIME);
         mPlace = getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_PLACE);
+        mHolder=getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_HOLDER);
         mContent = getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_CONTENT);
         isFavorite = getActivity().getIntent().getBooleanExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, false);
         isPreSignUp = getActivity().getIntent().getBooleanExtra(DetailsActivity.KEY_ARTICLE_IS_PRE_SIGN_UP, false);
         mImage = getActivity().getIntent().getStringExtra(DetailsActivity.KEY_ARTICLE_IMAGE);
-        imageUrl = StaticClass.HEADER_IMG_URL + mImage;
-        L.d(LOG_TAG, "id " + mId + " title " + mTitle + " content " + mContent + " imgUrl " + imageUrl + " isFavorite " + isFavorite);
+//        imageUrl = StaticClass.HEADER_IMG_URL + mImage;
+        L.d(LOG_TAG, "id " + mId + " title " + mTitle + " content " + mContent + " imgUrl " + mImage + " isFavorite " + isFavorite);
     }
 
     public static DetailsFragment newInstance() {
@@ -136,7 +138,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     //设置图片
     private void setCover() {
         Picasso.with(getContext())
-                .load(imageUrl)
+                .load(mImage)
                 .placeholder(R.drawable.placeholder)
                 .into(mHeaderImage);
         mHeaderImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -156,6 +158,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         mTvDetailsTitle.setText(mTitle);
         mTvDetailsTime.setText(mTime);
         mTvDetailsPlace.setText(mPlace);
+        mTvDetailsOrganizer.setText(mHolder);
 
         token = ShareUtils.getString(getContext(), StaticClass.KEY_ACCESS_TOKEN, "0");
 //        isPreSignUp = ShareUtils.getBoolean(getContext(), StaticClass.KEY_IS_PRE_SIGN_UP, false);

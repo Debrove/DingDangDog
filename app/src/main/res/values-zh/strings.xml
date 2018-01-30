@@ -17,4 +17,6 @@
     <string name="title_confirm_info">确认报名信息</string>
     <string name="tv_comment">评论</string>
     <string name="tv_share">分享</string>
+    <string name="title_sigin">签到</string>
+    <string name="tv_day">日</string>
 </resources>

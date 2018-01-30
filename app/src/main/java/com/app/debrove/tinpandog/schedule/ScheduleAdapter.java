@@ -11,10 +11,16 @@ import android.widget.TextView;
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.Activities;
 import com.app.debrove.tinpandog.data.Lectures;
+import com.app.debrove.tinpandog.data.Place;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
+import com.app.debrove.tinpandog.util.DateFormatUtils;
+import com.app.debrove.tinpandog.util.L;
 import com.ldf.calendar.model.CalendarDate;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +33,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ACTIVITIES = 0;
 
     private static final int TYPE_LECTURES = 1;
+    private static final String LOG_TAG = ScheduleAdapter.class.getSimpleName();
 
     private final Context mContext;
 
@@ -43,8 +50,6 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private OnRecyclerViewItemOnClickListener mListener;
 
-    private CalendarDate currentDate;
-
     ScheduleAdapter(Context context,
                     @NonNull List<Activities> mActivitiesList,
                     @NonNull List<Lectures> mLecturesList) {
@@ -54,29 +59,29 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mLecturesList = mLecturesList;
 
         mWrapperList = new ArrayList<>();
-        if (!mActivitiesList.isEmpty()) {
+        if (mActivitiesList.isEmpty() && mLecturesList.isEmpty()) {
+            mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
+            L.d(LOG_TAG, "all empty ");
+        } else if (!mActivitiesList.isEmpty()) {
+            L.d(LOG_TAG, "activity not empty ");
             for (int i = 0; i < mActivitiesList.size(); i++) {
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
                 iw.index = i;
                 mWrapperList.add(iw);
             }
-        }
-
-        if (!mLecturesList.isEmpty()) {
+        } else if (!mLecturesList.isEmpty()) {
+            L.d(LOG_TAG, "lecture not empty ");
             for (int i = 0; i < mLecturesList.size(); i++) {
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
                 iw.index = i;
                 mWrapperList.add(iw);
             }
         }
+
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if (position < getActivitiesSize()) {
-//            return TYPE_ACTIVITIES;
-//        }
-//        return TYPE_LECTURES;
         return mWrapperList.get(position).viewType;
     }
 
@@ -84,19 +89,27 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
         switch (viewType) {
+            case ItemWrapper.TYPE_EMPTY:
+                viewHolder = new ItemViewHolder(mLayoutInflater.inflate(R.layout.schedule_item, parent, false), mListener);
+                break;
             case ItemWrapper.TYPE_ACTIVITIES:
                 viewHolder = new ItemViewHolder(mLayoutInflater.inflate(R.layout.schedule_item, parent, false), mListener);
                 break;
             case ItemWrapper.TYPE_LECTURES:
                 viewHolder = new ItemViewHolder(mLayoutInflater.inflate(R.layout.schedule_item, parent, false), mListener);
                 break;
+
         }
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        currentDate = new CalendarDate();
+        String date, time, time2,currentDate3;
+        long date1, currentDate1, currentTime, time1,currentDate2;
+        String month;
+        String day;
+        Date currentDate = new Date();
 
         ItemWrapper iw = mWrapperList.get(position);
         switch (iw.viewType) {
@@ -104,28 +117,85 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ItemViewHolder viewHolder = (ItemViewHolder) holder;
                 Activities activitiesItem = mActivitiesList.get(iw.index);
                 viewHolder.title.setText(activitiesItem.getTitle());
-                viewHolder.place.setText(activitiesItem.getPlace_id());
+                viewHolder.sponsor.setText(activitiesItem.getHolder());
+                viewHolder.place.setText(getPlace(activitiesItem.getNewsId()));
+
+                //时间格式化
+                date = activitiesItem.getTime();//news日期
+                time = activitiesItem.getTime1();//news时间
+                date1 = DateFormatUtils.formatNewsDateStringToLong(date);//news日期的时间戳
+                currentDate1 = DateFormatUtils.formatSystemDateStringToLong(String.valueOf(currentDate));//当前日期时间戳
+                month = DateFormatUtils.getMonth(date1);//news月份
+                day = DateFormatUtils.getDay(date1);//news day
+                time2=DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
+                currentTime =DateFormatUtils.formatNewsTimeStringToLong(time2);//只包含时分的当前时间戳
+                currentDate3=DateFormatUtils.formatNewsDateLongToString(currentDate1);//当前年月日
+                currentDate2=DateFormatUtils.formatNewsDateStringToLong(currentDate3);//只包含年月日的当前时间戳
+
+                L.d(LOG_TAG, " 当前时分：" + DateFormatUtils.formatNewsTimeLongToString(currentTime));
+                time1 = DateFormatUtils.formatNewsTimeStringToLong(time);//news时分的时间戳
+
+                viewHolder.showMonthView.setText(month);
+                viewHolder.showDayView.setText(day + mContext.getString(R.string.tv_day));
+                viewHolder.time.setText(activitiesItem.getTime1());
+                L.d(LOG_TAG, " place " + getPlace(activitiesItem.getNewsId()) + " " + getPlace(activitiesItem.getId()));
+                L.d(LOG_TAG, "date " + date + " Month " + month + " Day " + day + " currentDate " + currentDate + " currentDate1 " + currentDate1 +
+                        " currentTime " + currentTime +" date1 "+date1 +" currentDate2 " + currentDate2+" time1 "+time1);
+
+                if (date1 - currentDate2 > 0) {
+                    viewHolder.start.setText("未开始");
+                } else if (date1 - currentDate2 < 0) {
+                    viewHolder.start.setText("已结束");
+                } else {
+                    if (time1 > currentTime) {
+                        viewHolder.start.setText("未开始");
+                    } else if (time1 < currentTime) {
+                        viewHolder.start.setText("已经开始");
+                    }
+                }
+
                 break;
             case ItemWrapper.TYPE_LECTURES:
                 ItemViewHolder viewHolder1 = (ItemViewHolder) holder;
                 Lectures lecturesItem = mLecturesList.get(iw.index);
                 viewHolder1.title.setText(lecturesItem.getTitle());
-                viewHolder1.place.setText(lecturesItem.getPlace_id());
+                viewHolder1.sponsor.setText(lecturesItem.getHolder());
+                viewHolder1.place.setText(getPlace(lecturesItem.getNewsId()));
+
+                //时间格式化
+                date = lecturesItem.getTime();//news日期
+                time = lecturesItem.getTime1();//news时间
+                date1 = DateFormatUtils.formatNewsDateStringToLong(date);//news日期的时间戳
+                currentDate1 = DateFormatUtils.formatSystemDateStringToLong(String.valueOf(currentDate));//当前日期时间戳
+                month = DateFormatUtils.getMonth(date1);//news月份
+                day = DateFormatUtils.getDay(date1);//news day
+                time2=DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
+                currentTime = DateFormatUtils.formatNewsTimeStringToLong(time2);//只包含时分的当前时间戳
+                currentDate2=currentDate1/100000*100000;//只包含年月日的当前时间戳
+                time1 = DateFormatUtils.formatNewsTimeStringToLong(time);//news时分的时间戳
+
+                viewHolder1.showMonthView.setText(month);
+                viewHolder1.showDayView.setText(day + mContext.getString(R.string.tv_day));
+                viewHolder1.time.setText(lecturesItem.getTime1());
+
+                L.d(LOG_TAG, " place " + getPlace(lecturesItem.getNewsId()) + " " + getPlace(lecturesItem.getId()));
+                L.d(LOG_TAG, "date " + date + " Month " + month + " Day " + day + " currentDate " + currentDate + " currentDate1 " + currentDate1 +
+                        " currentTime " + currentTime);
+
+                if (date1 - currentDate2 > 0) {
+                    viewHolder1.start.setText("未开始");
+                } else if (date1 - currentDate2 < 0) {
+                    viewHolder1.start.setText("已结束");
+                } else {
+                    if (time1 > currentTime) {
+                        viewHolder1.start.setText("未开始");
+                    } else if (time1 < currentTime) {
+                        viewHolder1.start.setText("已经开始");
+                    }
+                }
+
                 break;
-
         }
-
-//        Activities activitiesItem = mActivitiesList.get(position);
-//        ItemViewHolder viewHolder = (ItemViewHolder) holder;
-//        //viewHolder.showMonthView.setText(currentDate.getMonth());
-//        //viewHolder.showDayView.setText(currentDate.getDay());
-//
-//
-//        Lectures lecturesItem = mLecturesList.get(position - mActivitiesList.size());
-//        ItemViewHolder viewHolder1 = (ItemViewHolder) holder;
-//        //viewHolder1.showMonthView.setText(currentDate.getMonth());
-//        //viewHolder1.showDayView.setText(currentDate.getDay());
-
     }
 
 
@@ -164,15 +234,21 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private OnRecyclerViewItemOnClickListener listener;
         private TextView showMonthView;
         private TextView showDayView;
+        private TextView time;
         private TextView title;
         private TextView place;
+        private TextView sponsor;
+        private TextView start;
 
         ItemViewHolder(View itemView, OnRecyclerViewItemOnClickListener listener) {
             super(itemView);
             showMonthView = itemView.findViewById(R.id.show_month_view);
             showDayView = itemView.findViewById(R.id.show_day_view);
+            time = itemView.findViewById(R.id.tv_time);
             title = itemView.findViewById(R.id.title);
             place = itemView.findViewById(R.id.tv_place);
+            sponsor = itemView.findViewById(R.id.tv_sponsor);
+            start = itemView.findViewById(R.id.tv_isStarted);
             this.listener = listener;
             itemView.setOnClickListener(this);
         }
@@ -191,16 +267,19 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mLecturesList.clear();
         mWrapperList.clear();
 
-        if (!mActivitiesList.isEmpty()) {
+        if (activitiesList.isEmpty() && lecturesList.isEmpty()) {
+            mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
+            L.d(LOG_TAG, "update:all empty ");
+        } else if (!activitiesList.isEmpty()) {
             for (int i = 0; i < activitiesList.size(); i++) {
+                L.d(LOG_TAG, "update:activity not empty ");
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
                 iw.index = i;
                 mWrapperList.add(iw);
                 mActivitiesList.add(activitiesList.get(i));
             }
-        }
-
-        if (!mLecturesList.isEmpty()) {
+        } else if (!lecturesList.isEmpty()) {
+            L.d(LOG_TAG, "update:lecture not empty ");
             for (int i = 0; i < lecturesList.size(); i++) {
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
                 iw.index = i;
@@ -208,6 +287,19 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mLecturesList.add(lecturesList.get(i));
             }
         }
+
+
         notifyDataSetChanged();
+    }
+
+    private String getPlace(int id) {
+        String name = "未知";
+        List<Place> list = DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
+        L.d(LOG_TAG, "list " + list + "size " + list.size());
+        for (Place place1 : list) {
+            name = place1.getName();
+            L.d(LOG_TAG, " name " + name);
+        }
+        return name;
     }
 }

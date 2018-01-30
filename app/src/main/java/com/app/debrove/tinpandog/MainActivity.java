@@ -15,17 +15,23 @@ import android.view.MenuItem;
 
 import com.app.debrove.tinpandog.data.source.local.ActivitiesLocalDataSource;
 import com.app.debrove.tinpandog.data.source.local.LecturesLocalDataSource;
+import com.app.debrove.tinpandog.data.source.local.UserLocalDataSource;
 import com.app.debrove.tinpandog.data.source.remote.ActivitiesRemoteDataSource;
 import com.app.debrove.tinpandog.data.source.remote.LecturesRemoteDataSource;
+import com.app.debrove.tinpandog.data.source.remote.UserRemoteDataSource;
 import com.app.debrove.tinpandog.data.source.repository.ActivitiesRepository;
 import com.app.debrove.tinpandog.data.source.repository.LecturesRepository;
+import com.app.debrove.tinpandog.data.source.repository.UserRepository;
 import com.app.debrove.tinpandog.favorites.FavoritesActivity;
 import com.app.debrove.tinpandog.groups.GroupsFragment;
 import com.app.debrove.tinpandog.helper.BottomNavigationViewHelper;
 import com.app.debrove.tinpandog.news.NewsFragment;
 import com.app.debrove.tinpandog.schedule.ScheduleFragment;
 import com.app.debrove.tinpandog.schedule.SchedulePresenter;
+import com.app.debrove.tinpandog.signup.SignInActivity;
 import com.app.debrove.tinpandog.user.UserFragment;
+import com.app.debrove.tinpandog.user.UserInfoActivity;
+import com.app.debrove.tinpandog.user.UserPresenter;
 
 import org.litepal.LitePal;
 
@@ -69,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         ActivitiesLocalDataSource.getInstance()),
                 LecturesRepository.getInstance(LecturesRemoteDataSource.getInstance(),
                         LecturesLocalDataSource.getInstance()));
+
+        new UserPresenter(mUserFragment,
+                UserRepository.getInstance(UserRemoteDataSource.getInstance(),
+                        UserLocalDataSource.getInstance()));
 
         //返回app后可以保留在上次的页面，如果为空则为首页
         if (savedInstanceState != null) {
@@ -129,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();//加上同步
 
         mNavigation.setNavigationItemSelectedListener(this);
+
     }
 
     //缓存退出时的 状态or页面
@@ -222,12 +233,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_user:
-                //Intent intent=new Intent(this,UserInfo.class);
+                Intent intent=new Intent(this,UserInfoActivity.class);
+                startActivity(intent);
+                mDrawer.closeDrawers();
                 break;
             case R.id.drawer_favorite:
-                Intent intent = new Intent(this, FavoritesActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(this, FavoritesActivity.class);
+                startActivity(intent1);
+                mDrawer.closeDrawers();
                 break;
+            case R.id.drawer_sign_in:
+                Intent intent2 = new Intent(this, SignInActivity.class);
+                startActivity(intent2);
+                mDrawer.closeDrawers();
             default:
                 break;
         }

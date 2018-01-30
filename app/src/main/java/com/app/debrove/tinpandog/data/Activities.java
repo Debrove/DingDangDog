@@ -14,13 +14,19 @@ import org.litepal.crud.DataSupport;
 
 public class Activities extends DataSupport {
 
+    //private Place place;//获取Place表的引用
+
     private int id;
 
     private String title;//标题
 
     private String time;//日期
 
-    private String place_id;//地点
+    private String time1;//时间
+
+    private Place place_id;//地点
+
+    private String holder;//主办方
 
     private String text;//新闻内容
 
@@ -57,6 +63,14 @@ public class Activities extends DataSupport {
 
     public void setTime(String date) {
         this.time = date;
+    }
+
+    public String getTime1() {
+        return time1;
+    }
+
+    public void setTime1(String time1) {
+        this.time1 = time1;
     }
 
     public String getText() {
@@ -99,11 +113,11 @@ public class Activities extends DataSupport {
         this.newsId = newsId;
     }
 
-    public String getPlace_id() {
+    public Place getPlace_id() {
         return place_id;
     }
 
-    public void setPlace_id(String place_id) {
+    public void setPlace_id(Place place_id) {
         this.place_id = place_id;
     }
 
@@ -113,6 +127,14 @@ public class Activities extends DataSupport {
 
     public void setPre_sign_up(boolean pre_sign_up) {
         this.pre_sign_up = pre_sign_up;
+    }
+
+    public String getHolder() {
+        return holder;
+    }
+
+    public void setHolder(String holder) {
+        this.holder = holder;
     }
 
     //    //比较时间排序

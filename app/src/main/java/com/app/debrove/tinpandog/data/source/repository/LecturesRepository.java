@@ -3,6 +3,7 @@ package com.app.debrove.tinpandog.data.source.repository;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.app.debrove.tinpandog.data.BannerResponse;
 import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.data.source.datasource.LecturesDataSource;
 import com.app.debrove.tinpandog.util.L;
@@ -48,9 +49,9 @@ public class LecturesRepository implements LecturesDataSource {
     }
 
     @Override
-    public void getNews(final boolean clearCache, final long date, @NonNull final LoadNewsCallback callback) {
+    public void getNews(final boolean clearCache, @NonNull final LoadNewsCallback callback) {
         // Get data by accessing network first.
-        mRemoteDataSource.getNews(clearCache, date, new LoadNewsCallback() {
+        mRemoteDataSource.getNews(clearCache, new LoadNewsCallback() {
             @Override
             public void onNewsLoaded(@NonNull List<Lectures> list) {
                 callback.onNewsLoaded(list);
@@ -60,7 +61,7 @@ public class LecturesRepository implements LecturesDataSource {
             @Override
             public void onDataNotAvailable() {
                 L.d(LOG_TAG, "remote data access error");
-                mLocalDataSource.getNews(false, date, new LoadNewsCallback() {
+                mLocalDataSource.getNews(false, new LoadNewsCallback() {
                     @Override
                     public void onNewsLoaded(@NonNull List<Lectures> list) {
                         refreshCache(clearCache, list);
@@ -72,6 +73,24 @@ public class LecturesRepository implements LecturesDataSource {
                         callback.onDataNotAvailable();
                     }
                 });
+            }
+        });
+    }
+
+    @Override
+    public void getNewsByTime(long date, @NonNull final LoadNewsCallback callback) {
+        mLocalDataSource.getNewsByTime(date, new LoadNewsCallback() {
+            @Override
+            public void onNewsLoaded(@NonNull List<Lectures> list) {
+                for (Lectures item : list) {
+                    L.d(LOG_TAG, "by time" + item.getNewsId() + "title" + item.getTitle() + item.isFavorite());
+                }
+                callback.onNewsLoaded(list);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
             }
         });
     }
@@ -90,6 +109,21 @@ public class LecturesRepository implements LecturesDataSource {
             @Override
             public void onDataNotAvailable() {
 
+            }
+        });
+    }
+
+    @Override
+    public void getAllNewsSignedUp(@NonNull final LoadNewsCallback callback) {
+        mLocalDataSource.getAllNewsSignedUp(new LoadNewsCallback() {
+            @Override
+            public void onNewsLoaded(@NonNull List<Lectures> lecturesList) {
+                callback.onNewsLoaded(lecturesList);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
             }
         });
     }
@@ -126,10 +160,21 @@ public class LecturesRepository implements LecturesDataSource {
     }
 
     @Override
-    public void signUpItem(int itemId, boolean signUp, String token) {
+    public void signUpItem(final int itemId, final boolean signUp, final String token, final LoadMessageCallback callback) {
         L.d(LOG_TAG, itemId + " " + signUp + " token " + token);
-        mRemoteDataSource.signUpItem(itemId, signUp, token);
-        mLocalDataSource.signUpItem(itemId, signUp, token);
+        mRemoteDataSource.signUpItem(itemId, signUp, token, new LoadMessageCallback() {
+            @Override
+            public void onMessageLoaded(@NonNull String message) {
+                callback.onMessageLoaded(message);
+                mLocalDataSource.signUpItem(itemId, signUp, token, callback);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+
     }
 
     @Override
@@ -146,6 +191,39 @@ public class LecturesRepository implements LecturesDataSource {
         for (Lectures item : list) {
             mCachedItems.put(item.getNewsId(), item);
         }
+    }
+
+    @Override
+    public void getImagesUrl(@NonNull final LoadBannerImagesCallback callback) {
+        mRemoteDataSource.getImagesUrl(new LoadBannerImagesCallback() {
+            @Override
+            public void onUrlLoaded(@NonNull List<BannerResponse.DataBean> list) {
+                callback.onUrlLoaded(list);
+                L.d(LOG_TAG, " " + list);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
+    public void refreshToken(String telephone, final LoadTokenCallback callback) {
+        mRemoteDataSource.refreshToken(telephone, new LoadTokenCallback() {
+            @Override
+            public void onInfoLoaded(@NonNull String token) {
+                callback.onInfoLoaded(token);
+                L.d(LOG_TAG, " token " + token);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+                L.d(LOG_TAG, "token error");
+            }
+        });
     }
 
     private Lectures getItemWithId(int itemId) {

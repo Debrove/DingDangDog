@@ -90,26 +90,4 @@ public class SignUpActivity extends AppCompatActivity {
             getSupportFragmentManager().putFragment(outState, SignUpFragment.class.getSimpleName(), mSignUpFragment);
         }
     }
-
-    private void signUp(String token, int id) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitService.URL_BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitService.SignUpService service = retrofit.create(RetrofitService.SignUpService.class);
-        service.signUp(token, id)
-                .enqueue(new Callback<LoginResponse>() {
-                    @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                        L.d(LOG_TAG, response.body().getMessage());
-                    }
-
-                    @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        L.d("sign_up_error", t.toString());
-                    }
-                });
-    }
-
 }

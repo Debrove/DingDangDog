@@ -59,12 +59,14 @@ public class ActivitiesRepository implements ActivitiesDataSource {
             @Override
             public void onNewsLoaded(@NonNull List<Activities> list) {
                 callback.onNewsLoaded(list);
+                L.d(LOG_TAG,"list "+list);
                 saveAll(list);
+                updateAll(list);
             }
 
             @Override
             public void onDataNotAvailable() {
-                L.d(LOG_TAG, "data access error");
+                L.d(LOG_TAG, "data access error in network");
                 mLocalDataSource.getNews(false, new LoadNewsCallback() {
                     @Override
                     public void onNewsLoaded(@NonNull List<Activities> list) {
@@ -118,6 +120,22 @@ public class ActivitiesRepository implements ActivitiesDataSource {
     }
 
     @Override
+    public void getAllNewsSignedUp(@NonNull final LoadNewsCallback callback) {
+        mLocalDataSource.getAllNewsSignedUp(new LoadNewsCallback() {
+            @Override
+            public void onNewsLoaded(@NonNull List<Activities> activitiesList) {
+                L.d(LOG_TAG," all "+activitiesList);
+                callback.onNewsLoaded(activitiesList);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
     public void getFavorites(@NonNull final LoadNewsCallback callback) {
         mLocalDataSource.getFavorites(new LoadNewsCallback() {
             @Override
@@ -149,10 +167,21 @@ public class ActivitiesRepository implements ActivitiesDataSource {
     }
 
     @Override
-    public void signUpItem(int itemId, boolean signUp, String token) {
+    public void signUpItem(final int itemId, final boolean signUp, final String token, final LoadMessageCallback callback) {
         L.d(LOG_TAG, itemId + " " + signUp + " token " + token);
-        mRemoteDataSource.signUpItem(itemId, signUp, token);
-        mLocalDataSource.signUpItem(itemId, signUp, token);
+        mRemoteDataSource.signUpItem(itemId, signUp, token, new LoadMessageCallback() {
+            @Override
+            public void onMessageLoaded(@NonNull String message) {
+                callback.onMessageLoaded(message);
+                mLocalDataSource.signUpItem(itemId, signUp, token,callback);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+
 
     }
 
@@ -173,6 +202,12 @@ public class ActivitiesRepository implements ActivitiesDataSource {
     }
 
     @Override
+    public void updateAll(@NonNull List<Activities> list) {
+        mLocalDataSource.updateAll(list);
+        mRemoteDataSource.updateAll(list);
+    }
+
+    @Override
     public void getImagesUrl(@NonNull final LoadBannerImagesCallback callback) {
         mRemoteDataSource.getImagesUrl(new LoadBannerImagesCallback() {
             @Override
@@ -184,6 +219,23 @@ public class ActivitiesRepository implements ActivitiesDataSource {
             @Override
             public void onDataNotAvailable() {
                 callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
+    public void refreshToken(String telephone, final LoadTokenCallback callback) {
+        mRemoteDataSource.refreshToken(telephone, new LoadTokenCallback() {
+            @Override
+            public void onInfoLoaded(@NonNull String token) {
+                callback.onInfoLoaded(token);
+                L.d(LOG_TAG, " token " + token);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+                L.d(LOG_TAG, "token error");
             }
         });
     }

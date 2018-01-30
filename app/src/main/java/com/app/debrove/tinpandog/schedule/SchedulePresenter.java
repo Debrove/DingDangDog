@@ -74,4 +74,30 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void loadAll() {
+        mActivitiesRepository.getAllNewsSignedUp(new ActivitiesDataSource.LoadNewsCallback() {
+            @Override
+            public void onNewsLoaded(@NonNull final List<Activities> activitiesList) {
+                mLecturesRepository.getAllNewsSignedUp(new LecturesDataSource.LoadNewsCallback() {
+                    @Override
+                    public void onNewsLoaded(@NonNull List<Lectures> lecturesList) {
+                        mView.getAllList(activitiesList, lecturesList);
+                        L.d(LOG_TAG, " all " + activitiesList + " " + lecturesList);
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
+    }
 }

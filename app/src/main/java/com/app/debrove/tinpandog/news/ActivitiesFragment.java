@@ -25,6 +25,7 @@ import com.app.debrove.tinpandog.data.Activities;
 import com.app.debrove.tinpandog.data.BannerResponse;
 import com.app.debrove.tinpandog.data.ContentType;
 import com.app.debrove.tinpandog.data.Lectures;
+import com.app.debrove.tinpandog.data.Place;
 import com.app.debrove.tinpandog.details.DetailsActivity;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
 import com.app.debrove.tinpandog.retrofit.RetrofitService;
@@ -84,12 +85,6 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
     private int mListSize = 0;
 
     public List<String> networkImages = new ArrayList<>();
-//    private String[] images = {"http://rehellinen.cn/project/dingdang/public/upload/20171206/390458bd9ca43725e6e2377efb54795c.jpg",
-//            "http://rehellinen.cn/project/dingdang/public/upload/20171206/73cab09ab587c959cee2f4ae3444fdfb.jpg",
-//            "http://d.3987.com/sqmy_131219/001.jpg",
-//            "http://img2.3lian.com/2014/f2/37/d/39.jpg"
-//    };
-
 
     public ActivitiesFragment() {
     }
@@ -117,7 +112,6 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
             public void onRefresh() {
                 Calendar c = Calendar.getInstance();
                 c.setTimeZone(TimeZone.getTimeZone("GMT+08"));
-                //mPresenter.loadNews(c.getTimeInMillis(), true);
                 mPresenter.loadNews(true);
                 mPresenter.loadBannerUrl();
                 mRefreshLayout.setRefreshing(false);
@@ -149,7 +143,6 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
         convenientBanner.setLayoutParams(
                 new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         getActivity().getWindowManager().getDefaultDisplay().getHeight() / 4));
-        //networkImages = Arrays.asList(images);
     }
 
     //获取轮播图
@@ -202,12 +195,13 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
                     Intent intent = new Intent(getActivity(), DetailsActivity.class);
                     //多了Header轮播，位置-1
                     int pos = position - 1;
-                    L.d(LOG_TAG, "id:" + list.get(pos).getId() + " id saved " + list.get(pos).getNewsId() + " isFavorite " + list.get(pos).isFavourite());
+                    L.d(LOG_TAG, "id:" + list.get(pos).getId() + " id saved " + list.get(pos).getNewsId() + " place " + list.get(pos).getPlace_id().getName() + " isFavorite " + list.get(pos).isFavourite() + " isSignUp " + list.get(pos).isPre_sign_up());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, list.get(pos).getNewsId());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, list.get(pos).getTitle());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, list.get(pos).getTime());
-                    intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, list.get(pos).getPlace_id());
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, list.get(pos).getPlace_id().getName());
+                    intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, list.get(pos).getHolder());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, list.get(pos).getDetail());
                     intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, list.get(pos).getPhoto_url());
 
@@ -241,15 +235,15 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
     public void showBannerImages(@NonNull List<BannerResponse.DataBean> list) {
         if (list.isEmpty()) {
             for (BannerResponse.DataBean url : list) {
-                L.d(LOG_TAG, StaticClass.HEADER_IMG_URL + url.getPhoto_url());
-                networkImages.add(StaticClass.HEADER_IMG_URL + url.getPhoto_url());
+                L.d(LOG_TAG, url.getPhoto_url());
+                networkImages.add(url.getPhoto_url());
             }
         } else {
             //updateImages
             networkImages.clear();
             for (BannerResponse.DataBean url : list) {
-                L.d(LOG_TAG, "update" + StaticClass.HEADER_IMG_URL + url.getPhoto_url());
-                networkImages.add(StaticClass.HEADER_IMG_URL + url.getPhoto_url());
+                L.d(LOG_TAG, "update" + url.getPhoto_url());
+                networkImages.add(url.getPhoto_url());
             }
         }
 
@@ -297,6 +291,11 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
                 mRefreshLayout.setRefreshing(active);
             }
         });
+    }
+
+    @Override
+    public void setToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 

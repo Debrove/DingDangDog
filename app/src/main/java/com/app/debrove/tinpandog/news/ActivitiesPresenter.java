@@ -64,6 +64,7 @@ public class ActivitiesPresenter implements ActivitiesContract.Presenter {
             public void onDataNotAvailable() {
                 if (mView.isActive()) {
                     mView.setLoadingIndicator(false);
+                    mView.setToast("网络问题，刷新失败");
                 }
             }
         });
@@ -84,6 +85,7 @@ public class ActivitiesPresenter implements ActivitiesContract.Presenter {
             public void onDataNotAvailable() {
                 if (mView.isActive()) {
                     mView.setLoadingIndicator(false);
+                    mView.setToast("网络问题，刷新失败");
                 }
             }
         });
@@ -109,4 +111,5 @@ public class ActivitiesPresenter implements ActivitiesContract.Presenter {
         });
 
     }
+
 }

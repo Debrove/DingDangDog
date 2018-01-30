@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- 自定义输入框-->
+    <declare-styleable name="customEditText">
+        <!--输入框的数量-->
+        <attr name="et_number" format="integer" />
+        <!--输入框的宽度-->
+        <attr name="et_width" format="dimension|reference" />
+        <!--输入框文字颜色-->
+        <attr name="et_text_color" format="color|reference" />
+        <!--输入框文字大小-->
+        <attr name="et_text_size" format="dimension|reference" />
+        <!--输入框背景-->
+        <attr name="et_bg" format="reference" />
+        <!--光标样式-->
+        <attr name="et_cursor" format="reference" />
+    </declare-styleable>
 
 </resources>

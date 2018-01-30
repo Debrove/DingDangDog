@@ -15,9 +15,18 @@ public interface SignUpContract {
 
         boolean isActive();
 
+        void showSignUpMessage(String message);
+
+        void getToken(String token);
+
+        void refreshToken();
+
+        void refreshSignUp(String token);
     }
 
     interface Presenter extends BasePresenter {
         void updateSignUpInfo(ContentType type, int id, boolean signUp, String token);
+
+        void refreshToken(ContentType type,String telephone);
     }
 }

@@ -23,10 +23,15 @@ public interface ScheduleContract {
 
         void showList(List<Activities> activitiesList,
                       List<Lectures> lecturesList);
+
+        void getAllList(List<Activities> activitiesList,
+                      List<Lectures> lecturesList);
     }
 
     interface Presenter extends BasePresenter {
 
         void loadList(long date);
+
+        void loadAll();
     }
 }
