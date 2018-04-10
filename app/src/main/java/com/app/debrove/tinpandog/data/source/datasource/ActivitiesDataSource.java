@@ -21,13 +21,13 @@ public interface ActivitiesDataSource {
     }
 
     interface LoadBannerImagesCallback {
-        void onUrlLoaded(@NonNull List<BannerResponse.DataBean> list);
+        void onUrlLoaded(@NonNull List<BannerResponse.Banner> list);
 
         void onDataNotAvailable();
     }
 
     interface LoadMessageCallback {
-        void onMessageLoaded(@NonNull String message);
+        void onMessageLoaded(int status,@NonNull String message);
 
         void onDataNotAvailable();
     }

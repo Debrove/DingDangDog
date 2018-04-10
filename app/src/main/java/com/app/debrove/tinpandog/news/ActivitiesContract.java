@@ -21,7 +21,7 @@ public interface ActivitiesContract {
     interface View extends BaseView<Presenter> {
         void showResult(@NonNull List<Activities> list);
 
-        void showBannerImages(@NonNull List<BannerResponse.DataBean> list);
+        void showBannerImages(@NonNull List<BannerResponse.Banner> list);
 
         boolean isActive();
 

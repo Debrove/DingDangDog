@@ -11,13 +11,13 @@ public class BannerResponse {
 
     /**
      * status : 1
-     * message : 获取轮播图成功
-     * data : [{"id":7,"photo_url":"/project/dingdang/public/upload/20171206/390458bd9ca43725e6e2377efb54795c.jpg","listorder":0,"status":1},{"id":6,"photo_url":"/project/dingdang/public/upload/20171206/73cab09ab587c959cee2f4ae3444fdfb.jpg","listorder":0,"status":1},{"id":2,"photo_url":"/project/dingdang/public/upload\\20171201\\3c5deaee86eb670b015e545811484ade.gif","listorder":0,"status":1}]
+     * message : 成功
+     * data : {"data":[{"id":8,"photo_url":"https://20298479.rehellinen.cn/dingdang/public/upload/20180227/97f3f46337e0005bb16312c890bdc276.jpg","listorder":0,"status":1},{"id":7,"photo_url":"https://20298479.rehellinen.cn/dingdang/public/upload/20180227/d08ae521e45c2fa313d49cfcf19834ba.jpg","listorder":0,"status":1},{"id":6,"photo_url":"https://20298479.rehellinen.cn/dingdang/public/upload/20180227/bf5f9fcf41cf4beb6bfa5bb4c7403a54.jpg","listorder":0,"status":1},{"id":2,"photo_url":"https://20298479.rehellinen.cn/dingdang/public/upload/20180227/e533b9a6da27752f52a1ab51bce7a2fa.jpg","listorder":0,"status":1}],"request_url":"/dingdang/public/api/v1/banner"}
      */
 
     private int status;
     private String message;
-    private List<DataBean> data;
+    private BaseDataResponse<Banner> data;
 
     public int getStatus() {
         return status;
@@ -35,18 +35,19 @@ public class BannerResponse {
         this.message = message;
     }
 
-    public List<DataBean> getData() {
+    public BaseDataResponse<Banner> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(BaseDataResponse<Banner> data) {
         this.data = data;
     }
 
-    public static class DataBean {
+
+    public static class Banner {
         /**
-         * id : 7
-         * photo_url : /project/dingdang/public/upload/20171206/390458bd9ca43725e6e2377efb54795c.jpg
+         * id : 8
+         * photo_url : https://20298479.rehellinen.cn/dingdang/public/upload/20180227/97f3f46337e0005bb16312c890bdc276.jpg
          * listorder : 0
          * status : 1
          */

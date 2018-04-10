@@ -55,9 +55,24 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             L.d(LOG_TAG, "activities " + id + " signUp " + signUp + " token " + token);
             mActivitiesRepository.signUpItem(id, signUp, token, new ActivitiesDataSource.LoadMessageCallback() {
                 @Override
-                public void onMessageLoaded(@NonNull String message) {
-                    L.d(LOG_TAG, " message " + message);
-                    mView.showSignUpMessage(message);
+                public void onMessageLoaded(int status, @NonNull String message) {
+                    switch (status) {
+                        case 10004:
+                            //status=10004，token过期
+                            mView.refreshToken();
+                            break;
+                        case 1:
+                            //报名成功
+                            L.d(LOG_TAG, " message " + message);
+                            mView.showSignUpMessage(status, message);
+                            break;
+                        case 70003:
+                            L.d(LOG_TAG, " message " + message);
+                            mView.showSignUpMessage(status, message);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 @Override
@@ -69,9 +84,24 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             L.d(LOG_TAG, "lectures " + id + " signUp " + signUp + " token " + token);
             mLecturesRepository.signUpItem(id, signUp, token, new LecturesDataSource.LoadMessageCallback() {
                 @Override
-                public void onMessageLoaded(@NonNull String message) {
-                    L.d(LOG_TAG, " message " + message);
-                    mView.showSignUpMessage(message);
+                public void onMessageLoaded(int status, @NonNull String message) {
+                    switch (status) {
+                        case 10004:
+                            //status=10004，token过期
+                            mView.refreshToken();
+                            break;
+                        case 1:
+                            //报名成功
+                            L.d(LOG_TAG, " message " + message);
+                            mView.showSignUpMessage(status, message);
+                            break;
+                        case 70003:
+                            L.d(LOG_TAG, " message " + message);
+                            mView.showSignUpMessage(status, message);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 @Override
@@ -84,7 +114,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     @Override
     public void refreshToken(ContentType type, String telephone) {
-        if (type==ContentType.TYPE_ACTIVITIES){
+        if (type == ContentType.TYPE_ACTIVITIES) {
             mActivitiesRepository.refreshToken(telephone, new ActivitiesDataSource.LoadTokenCallback() {
                 @Override
                 public void onInfoLoaded(@NonNull String token) {
@@ -98,7 +128,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     L.d(LOG_TAG, "刷新token失败");
                 }
             });
-        }else if (type==ContentType.TYPE_LECTURES){
+        } else if (type == ContentType.TYPE_LECTURES) {
             mLecturesRepository.refreshToken(telephone, new LecturesDataSource.LoadTokenCallback() {
                 @Override
                 public void onInfoLoaded(@NonNull String token) {

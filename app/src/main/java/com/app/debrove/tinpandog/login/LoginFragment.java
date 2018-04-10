@@ -83,10 +83,7 @@ public class LoginFragment extends Fragment {
     //登录点击事件
     @OnClick(R.id.btn_login)
     public void onViewClicked() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-        getActivity().finish();
-        /**
+
         final String telephone = mUserTelephone.getText().toString().trim();
         final String password = mUserPassword.getText().toString().trim();
 
@@ -116,7 +113,10 @@ public class LoginFragment extends Fragment {
                         if (Objects.equals(response.body().getStatus(), "1")) {
                             String token = response.body().getData().getToken();
                             L.d("user_login_success", response.body().getMessage() + "  ");
-                            Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                            //保存登陆状态
+                            ShareUtils.putBoolean(getContext(), StaticClass.SHARE_IS_LOG_IN, true);
 
                             //保留手机号，便于查询用户信息
                             ShareUtils.putString(getContext(), StaticClass.KEY_USER_TELEPHONE, telephone);
@@ -158,6 +158,8 @@ public class LoginFragment extends Fragment {
         } else if (TextUtils.isEmpty(password)) {
             mTilPassword.setErrorEnabled(true);
             mTilPassword.setError("密码不能为空");
-        }*/
+        }
+
+
     }
 }

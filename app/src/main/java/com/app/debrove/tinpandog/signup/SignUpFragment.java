@@ -22,8 +22,10 @@ import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.ShareUtils;
 import com.app.debrove.tinpandog.util.StaticClass;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -143,14 +145,16 @@ public class SignUpFragment extends Fragment implements SignUpContract.View, Vie
     }
 
     @Override
-    public void showSignUpMessage(String message) {
-        if (message.equals("报名成功")) {
+    public void showSignUpMessage(int status, String message) {
+        if (status == 1) {
             sendNoticeOneDayBefore();
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "报名成功", Toast.LENGTH_SHORT).show();
             mBtnConfirmInfo.setEnabled(false);
             mBtnConfirmInfo.setText("预报名成功");
-        } else {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        } else if (status == 70003) {
+            Toast.makeText(getContext(), "你已经报过名了", Toast.LENGTH_SHORT).show();
+            mBtnConfirmInfo.setEnabled(false);
+            mBtnConfirmInfo.setText("预报名成功");
         }
 
     }
@@ -158,21 +162,26 @@ public class SignUpFragment extends Fragment implements SignUpContract.View, Vie
     /**
      * 创建一个消息推送，并在活动开始一天前向用户推送
      */
-    private void sendNoticeOneDayBefore(){
-        long whenToSend,whenActivityStart;
-        String time[]=mTime.split("-");
-        if(time.length!=3){
-            Log.e(LOG_TAG,"my:wrong format of time");
+    private void sendNoticeOneDayBefore() {
+        long whenToSend, whenActivityStart;
+        String time[] = mTime.split("-");
+        if (time.length != 3) {
+            Log.e(LOG_TAG, "my:wrong format of time");
             return;
         }
-        int t[]=new int[3];
-        for (int i=0;i<3;i++)
-            t[i]=Integer.getInteger(time[i]);
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(t[0],t[1],t[2]);
-        whenActivityStart=calendar.getTimeInMillis();
-        whenToSend=whenActivityStart-24*60*60*1000;
-        ActivityReminder.createRemind(getContext(),whenToSend,whenActivityStart,mTitle);
+        int t[] = new int[3];
+        for (int i = 0; i < 3; i++) {
+            t[i] = Integer.parseInt(time[i]);
+            L.d("send", t[i]+" ");
+        }
+        Calendar calendar = Calendar.getInstance();
+        //解析时间，获得活动开始时间
+        // ！！！注意：这里calendar.set()这里的月份参数，从0开始，即一月为0，二月为1，十二月为11，
+        //与中文不同！！！
+        calendar.set(t[0], t[1]-1, t[2]);
+        whenActivityStart = calendar.getTimeInMillis();
+        whenToSend = whenActivityStart - 24 * 60 * 60 * 1000;
+        ActivityReminder.createRemind(getContext(), whenToSend, whenActivityStart, mTitle);
     }
 
     @Override

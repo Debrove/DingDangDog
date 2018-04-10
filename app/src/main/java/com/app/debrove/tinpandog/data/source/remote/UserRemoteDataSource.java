@@ -61,18 +61,18 @@ public class UserRemoteDataSource implements UserDataSource {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                         if (response.isSuccessful()) {
-                            L.d("userInfo", response.body().getData().getName() + telephone + response.body().getData().getNumber());
+                            L.d("userInfo", response.body().getData().getData().getName() + telephone + response.body().getData().getData().getNumber());
 
                             List<User> list=new ArrayList<>();
-                            list.add(response.body().getData());
+                            list.add(response.body().getData().getData());
                             L.d(LOG_TAG," list "+list);
 
                             callback.onInfoLoaded(list);
 
                             //通过手机号码更新用户信息
                             User user = new User();
-                            user.setName(response.body().getData().getName());
-                            user.setNumber(String.valueOf(response.body().getData().getNumber()));
+                            user.setName(response.body().getData().getData().getName());
+                            user.setNumber(String.valueOf(response.body().getData().getData().getNumber()));
                             user.updateAll("telephone = ?", String.valueOf(telephone));
                             //refreshToken();(测试刷新token)
                         } else {

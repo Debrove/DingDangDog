@@ -58,9 +58,9 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                 .enqueue(new Callback<BaseResponse<Lectures>>() {
                     @Override
                     public void onResponse(Call<BaseResponse<Lectures>> call, Response<BaseResponse<Lectures>> response) {
-                        callback.onNewsLoaded(response.body().getData());
+                        callback.onNewsLoaded(response.body().getData().getData());
                         //将原有id保存起来，避免保存到数据库时id混乱
-                        for (Lectures item : response.body().getData()) {
+                        for (Lectures item : response.body().getData().getData()) {
 
                             String date = item.getTime().substring(0, 10);
                             String time = item.getTime().substring(11);
@@ -134,13 +134,13 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                 .build();
 
         RetrofitService.SignUpService service = retrofit.create(RetrofitService.SignUpService.class);
-        service.signUp(token, itemId)
+        service.signUp(token, itemId,1)
                 .enqueue(new Callback<BaseResponse>() {
                     @Override
                     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                         if (response.isSuccessful()) {
                             L.d(LOG_TAG, response.body().getMessage());
-                            callback.onMessageLoaded(response.body().getMessage());
+                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
                         } else {
                             callback.onDataNotAvailable();
                             L.d(LOG_TAG,response.errorBody()+ "");
@@ -174,10 +174,10 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                     public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
                         L.d(LOG_TAG, response.body().getMessage());
                         L.d(LOG_TAG + "data", response.body().getData().toString());
-                        for (BannerResponse.DataBean item : response.body().getData()) {
+                        for (BannerResponse.Banner item : response.body().getData().getData()) {
                             L.d(LOG_TAG, item.getPhoto_url());
                         }
-                        callback.onUrlLoaded(response.body().getData());
+                        callback.onUrlLoaded(response.body().getData().getData());
                     }
 
                     @Override

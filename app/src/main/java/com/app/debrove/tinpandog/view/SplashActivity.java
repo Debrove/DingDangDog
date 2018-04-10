@@ -34,11 +34,11 @@ public class SplashActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case StaticClass.HANDLER_SPLASH:
-                    //判断程序是否是已经登录
-                    if (isFirst()) {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    } else {
+                    //判断程序是否已经登陆
+                    if (isLoggedIn()) {
                         startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     }
                     finish();
                     break;
@@ -47,9 +47,14 @@ public class SplashActivity extends AppCompatActivity {
     };
 
     //判断是否已经登录
-//    public boolean isLoggedIn() {
-////        return EMClient.getInstance().isLoggedInBefore();
-//    }
+    public boolean isLoggedIn() {
+        boolean isLogIn = ShareUtils.getBoolean(this, StaticClass.SHARE_IS_LOG_IN, false);
+        if (isLogIn) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //判断程序是否是第一次运行
     private boolean isFirst() {
@@ -68,6 +73,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         //延时2000ms
-        mHandler.sendEmptyMessageDelayed(StaticClass.HANDLER_SPLASH, 2000);
+        mHandler.sendEmptyMessageDelayed(StaticClass.HANDLER_SPLASH, 1000);
     }
 }

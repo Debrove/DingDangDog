@@ -19,4 +19,6 @@
     <string name="tv_share">分享</string>
     <string name="title_sigin">签到</string>
     <string name="tv_day">日</string>
+    <string name="settings">设置</string>
+    <string name="tv_sign_in">签到</string>
 </resources>

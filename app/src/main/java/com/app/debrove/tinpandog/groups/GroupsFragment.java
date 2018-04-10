@@ -11,25 +11,21 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.reminder.db.NoticeInfo;
+import com.app.debrove.tinpandog.util.L;
 
 import org.litepal.crud.DataSupport;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -69,7 +65,6 @@ public class GroupsFragment extends Fragment implements GroupsContract.View, Too
         //Toolbar
         setHasOptionsMenu(true);
         mToolbarGroups.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-        mToolbarGroups.inflateMenu(R.menu.menu_groups);
         mToolbarGroups.setTitle("群组");
         mToolbarGroups.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +87,8 @@ public class GroupsFragment extends Fragment implements GroupsContract.View, Too
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         for(NoticeInfo noticeInfo:noticeInfoList){
             Date date=new Date(noticeInfo.getWhen());
-            Log.e(TAG,"my:"+simpleDateFormat.format(date));
+            L.d("attended",noticeInfo+" ");
+            Log.e(TAG,"my:"+simpleDateFormat.format(date)+" "+ simpleDateFormat.format(noticeInfo.getWhen()) + " " +simpleDateFormat.format(time));
             if(time>=noticeInfo.getWhen())
                 noticeInfo.delete();
             else
@@ -128,8 +124,4 @@ public class GroupsFragment extends Fragment implements GroupsContract.View, Too
         return true;
     }
 
-    @OnClick(R.id.groups_layout)
-    public void onViewClicked() {
-
-    }
 }

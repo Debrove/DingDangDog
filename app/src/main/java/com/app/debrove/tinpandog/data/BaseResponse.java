@@ -12,13 +12,13 @@ public class BaseResponse<T> {
 
     /**
      * status : 1
-     * message : 获取全部讲座信息成功
-     * data : [{"id":1,"title":"测试1","detail":"测试1详情","time":"2017-11-11","place_id":"","photo_url":"11","status":-1,"listorder":0}]
+     * message : 获取全部活动信息成功
+     * data : {"data":[{"id":5,"title":"","holder":"","detail":"","time":"2017-12-04","place_id":{"id":4,"name":"香洲区","max":200,"status":1},"photo_url":"","status":2,"listorder":0},{"id":8,"title":"品茶静心 读书会","holder":"123","detail":"","time":"2017-11-17","place_id":{"id":2,"name":"会议室","max":200,"status":1},"photo_url":"","status":2,"listorder":0},{"id":2,"title":"","holder":"","detail":"","time":"2017-11-12","place_id":{"id":2,"name":"会议室","max":200,"status":1},"photo_url":"","status":2,"listorder":0}],"request_url":"/dingdang/public/api/v1/allActivities"}
      */
 
     private int status;
     private String message;
-    private List<T> data;
+    private BaseDataResponse<T> data;
 
     public int getStatus() {
         return status;
@@ -36,11 +36,11 @@ public class BaseResponse<T> {
         this.message = message;
     }
 
-    public List<T> getData() {
+    public BaseDataResponse<T> getData() {
         return data;
     }
 
-    public void setData(List<T> data) {
+    public void setData(BaseDataResponse<T> data) {
         this.data = data;
     }
 }

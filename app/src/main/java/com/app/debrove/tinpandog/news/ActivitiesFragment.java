@@ -232,16 +232,16 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
     }
 
     @Override
-    public void showBannerImages(@NonNull List<BannerResponse.DataBean> list) {
+    public void showBannerImages(@NonNull List<BannerResponse.Banner> list) {
         if (list.isEmpty()) {
-            for (BannerResponse.DataBean url : list) {
+            for (BannerResponse.Banner url : list) {
                 L.d(LOG_TAG, url.getPhoto_url());
                 networkImages.add(url.getPhoto_url());
             }
         } else {
             //updateImages
             networkImages.clear();
-            for (BannerResponse.DataBean url : list) {
+            for (BannerResponse.Banner url : list) {
                 L.d(LOG_TAG, "update" + url.getPhoto_url());
                 networkImages.add(url.getPhoto_url());
             }

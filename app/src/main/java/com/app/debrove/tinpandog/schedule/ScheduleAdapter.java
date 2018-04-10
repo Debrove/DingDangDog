@@ -1,11 +1,13 @@
 package com.app.debrove.tinpandog.schedule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.debrove.tinpandog.R;
@@ -146,7 +148,9 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.start.setText("未开始");
                 } else if (date1 - currentDate2 < 0) {
                     viewHolder.start.setText("已结束");
-                } else {
+                    viewHolder.signIn.setClickable(false);
+                    viewHolder.signIn.setTextColor(Color.GRAY);
+                } else if (date1 == currentDate2){
                     if (time1 > currentTime) {
                         viewHolder.start.setText("未开始");
                     } else if (time1 < currentTime) {
@@ -186,7 +190,9 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder1.start.setText("未开始");
                 } else if (date1 - currentDate2 < 0) {
                     viewHolder1.start.setText("已结束");
-                } else {
+                    viewHolder1.signIn.setClickable(false);
+                    viewHolder1.signIn.setTextColor(Color.GRAY);
+                } else if (date1 == currentDate2){
                     if (time1 > currentTime) {
                         viewHolder1.start.setText("未开始");
                     } else if (time1 < currentTime) {
@@ -239,6 +245,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView place;
         private TextView sponsor;
         private TextView start;
+        private Button signIn;
 
         ItemViewHolder(View itemView, OnRecyclerViewItemOnClickListener listener) {
             super(itemView);
@@ -249,8 +256,9 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             place = itemView.findViewById(R.id.tv_place);
             sponsor = itemView.findViewById(R.id.tv_sponsor);
             start = itemView.findViewById(R.id.tv_isStarted);
+            signIn = itemView.findViewById(R.id.btn_sign_in);
             this.listener = listener;
-            itemView.setOnClickListener(this);
+            signIn.setOnClickListener(this);
         }
 
         @Override

@@ -87,6 +87,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_attended"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -117,8 +118,8 @@
                 android:paddingStart="@dimen/primary_margin">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_comment_blue_500_24dp" />
 
@@ -151,8 +152,8 @@
                 android:paddingStart="@dimen/primary_margin">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/cards" />
 
@@ -176,8 +177,8 @@
                 android:paddingEnd="@dimen/primary_margin">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_favorite_red_600_24dp" />
 
@@ -200,8 +201,8 @@
                 android:paddingEnd="@dimen/primary_margin">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_folder_orange_700_24dp" />
 
@@ -219,6 +220,7 @@
 
 
         <LinearLayout
+            android:id="@+id/ll_user_settings"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
@@ -228,8 +230,8 @@
             android:paddingEnd="@dimen/primary_margin">
 
             <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_settings_blue_500_24dp" />
 

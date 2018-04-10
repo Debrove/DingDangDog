@@ -95,7 +95,7 @@ public class ActivitiesPresenter implements ActivitiesContract.Presenter {
     public void loadBannerUrl() {
         mActivitiesRepository.getImagesUrl(new ActivitiesDataSource.LoadBannerImagesCallback() {
             @Override
-            public void onUrlLoaded(@NonNull List<BannerResponse.DataBean> list) {
+            public void onUrlLoaded(@NonNull List<BannerResponse.Banner> list) {
                 if (mView.isActive()) {
                     mView.showBannerImages(list);
                     mView.setLoadingIndicator(false);

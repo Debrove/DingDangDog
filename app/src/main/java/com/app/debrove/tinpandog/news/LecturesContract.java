@@ -19,7 +19,7 @@ public interface LecturesContract {
     interface View extends BaseView<Presenter> {
         void showResult(@NonNull List<Lectures> list);
 
-        void showBannerImages(@NonNull List<BannerResponse.DataBean> list);
+        void showBannerImages(@NonNull List<BannerResponse.Banner> list);
 
         boolean isActive();
 

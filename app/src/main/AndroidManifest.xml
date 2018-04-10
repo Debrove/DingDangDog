@@ -80,6 +80,10 @@
 
         <activity android:name=".signup.SignInActivity" />
 
+        <activity android:name=".user.SettingsActivity" />
+
+        <activity android:name=".user.AttendedActivity" />
+
         <receiver android:name=".reminder.RemindBroadcastReceiver"/>
     </application>
 

@@ -239,7 +239,7 @@ public class UserFragment extends Fragment implements UserContract.View {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.ll_favorite, R.id.ll_user_info})
+    @OnClick({R.id.ll_favorite, R.id.ll_user_info,R.id.ll_user_settings,R.id.ll_attended})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_favorite:
@@ -252,6 +252,14 @@ public class UserFragment extends Fragment implements UserContract.View {
                 intent1.putExtra(UserInfoActivity.KEY_USERNAME, name);
                 intent1.putExtra(UserInfoActivity.KEY_USER_STU_NUM, stuNum);
                 startActivity(intent1);
+                break;
+            case R.id.ll_user_settings:
+                Intent intent2 = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent2);
+                break;
+            case R.id.ll_attended:
+                Intent intent3 = new Intent(getActivity(), AttendedActivity.class);
+                startActivity(intent3);
                 break;
             default:
                 break;

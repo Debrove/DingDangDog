@@ -18,6 +18,9 @@ public class StaticClass {
     //判断程序是否是第一次运行
     public static final String SHARE_IS_FIRST = "isFirst";
 
+    //判断程序是否登陆
+    public static final String SHARE_IS_LOG_IN = "isLogIn";
+
     //图片链接的前缀
 //    public static final String HEADER_IMG_URL = "http://";
 

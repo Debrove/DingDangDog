@@ -1,5 +1,6 @@
 package com.app.debrove.tinpandog.schedule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,14 +13,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.Activities;
 import com.app.debrove.tinpandog.data.Lectures;
+import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
+import com.app.debrove.tinpandog.signup.SignInActivity;
 import com.app.debrove.tinpandog.util.DateFormatUtils;
 import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.view.CustomDayView;
@@ -45,7 +50,7 @@ import butterknife.Unbinder;
  * Fragment主要执行View相关的操作
  */
 
-public class ScheduleFragment extends Fragment implements ScheduleContract.View {
+public class ScheduleFragment extends Fragment implements ScheduleContract.View, Toolbar.OnMenuItemClickListener {
 
     private static final String LOG_TAG = ScheduleFragment.class.getSimpleName();
 
@@ -110,6 +115,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         //Toolbar
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbarSchedule);
         setHasOptionsMenu(true);
+        mToolbarSchedule.inflateMenu(R.menu.menu_schedule);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -128,7 +134,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     }
 
     @Override
-    public void showList(List<Activities> activitiesList, List<Lectures> lecturesList) {
+    public void showList(final List<Activities> activitiesList, List<Lectures> lecturesList) {
         if (activitiesList == null && lecturesList == null) {
             mEmptyView.setVisibility(View.VISIBLE);
             setLoadingIndicator(false);
@@ -142,6 +148,23 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
             mLecturesList = lecturesList;
 
             mAdapter = new ScheduleAdapter(getContext(), activitiesList, lecturesList);
+            mAdapter.setItemClickListener(new OnRecyclerViewItemOnClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    switch (v.getId()) {
+                        case R.id.btn_sign_in:
+                            L.d("signIN", "signIn "+position);
+//                            L.d(LOG_TAG,"schedule info "+activitiesList.get(position).getPlace_id().getName()+
+//                            "id "+activitiesList.get(position).getPlace_id().getId());
+//                            Intent intent = new Intent(getContext(), SignInActivity.class);
+//                            startActivity(intent);
+                            
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
 
             mRecyclerView.setAdapter(mAdapter);
         } else {
@@ -161,7 +184,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
             mLecturesList = lecturesList;
         }
 
-        L.d(LOG_TAG,"list all "+mActivitiesList+ " "+ mLecturesList);
+        L.d(LOG_TAG, "list all " + mActivitiesList + " " + mLecturesList);
     }
 
     public void showCalendarView() {
@@ -184,7 +207,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         mShowDayView.setText(currentDate.getDay() + "日");
 
         final Long date = DateFormatUtils.formatNewsDateStringToLong(currentDate.toString());
-        L.d(LOG_TAG," currentDate "+date + " "+currentDate);
+        L.d(LOG_TAG, " currentDate " + date + " " + currentDate);
 
         L.d(LOG_TAG, "refresh in showCalendarDate() " + date);
         mPresenter.loadList(date);
@@ -213,7 +236,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
         mShowDayView.setText(date.getDay() + "日");
 
         final Long time = DateFormatUtils.formatNewsDateStringToLong(date.toString());
-        L.d(LOG_TAG,"click date "+time+" "+date);
+        L.d(LOG_TAG, "click date " + time + " " + date);
 
         L.d(LOG_TAG, "refresh in refreshClickDate() " + date);
         mPresenter.loadList(time);
@@ -263,40 +286,40 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     }
 
     private void initMarkData() {
-        currentDate=new CalendarDate();
+        currentDate = new CalendarDate();
 
         HashMap markData = new HashMap<>();
 
-        String time,time2;
-        long time1,currentDate1;
-        currentDate1=DateFormatUtils.formatNewsDateStringToLong(currentDate.toString());
+        String time, time2;
+        long time1, currentDate1;
+        currentDate1 = DateFormatUtils.formatNewsDateStringToLong(currentDate.toString());
 
         //0表示红点，1表示灰点
         L.d(LOG_TAG, "markData " + mActivitiesList);
-        for (Activities item:mActivitiesList) {
-            time=item.getTime();
-            time1=DateFormatUtils.formatNewsDateStringToLong(time);
-            time2=DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
+        for (Activities item : mActivitiesList) {
+            time = item.getTime();
+            time1 = DateFormatUtils.formatNewsDateStringToLong(time);
+            time2 = DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
 
-            if (time1-currentDate1>=0){
-                markData.put(time2,"0");
-            }else {
-                markData.put(time2,"1");
+            if (time1 - currentDate1 >= 0) {
+                markData.put(time2, "0");
+            } else {
+                markData.put(time2, "1");
             }
-            L.d(LOG_TAG," time "+ time +" time2 "+time2+" currentDate1 "+currentDate1);
+            L.d(LOG_TAG, " time " + time + " time2 " + time2 + " currentDate1 " + currentDate1);
         }
 
-        for (Lectures item:mLecturesList) {
-            time=item.getTime();
-            time1=DateFormatUtils.formatNewsDateStringToLong(time);
-            time2=DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
+        for (Lectures item : mLecturesList) {
+            time = item.getTime();
+            time1 = DateFormatUtils.formatNewsDateStringToLong(time);
+            time2 = DateFormatUtils.formatNewsDateLongToStringWithoutZero(time1);
 
-            if (time1-currentDate1>=0){
-                markData.put(time2,"0");
-            }else {
-                markData.put(time2,"1");
+            if (time1 - currentDate1 >= 0) {
+                markData.put(time2, "0");
+            } else {
+                markData.put(time2, "1");
             }
-            L.d(LOG_TAG," time "+ time +" time2 "+time2);
+            L.d(LOG_TAG, " time " + time + " time2 " + time2);
         }
 
         calendarAdapter.setMarkData(markData);
@@ -340,9 +363,20 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View 
     }
 
 
-    //    //回到今天
-//    private void onClickBackToDayBtn() {
-//        CalendarDate today = new CalendarDate();
-//        calendarAdapter.notifyDataChanged(today);
-//    }
+    //菜单栏的点击事件
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_back_today:
+                onClickBackToDayBtn();
+                break;
+        }
+        return true;
+    }
+
+    //回到今天
+    private void onClickBackToDayBtn() {
+        CalendarDate today = new CalendarDate();
+        calendarAdapter.notifyDataChanged(today);
+    }
 }

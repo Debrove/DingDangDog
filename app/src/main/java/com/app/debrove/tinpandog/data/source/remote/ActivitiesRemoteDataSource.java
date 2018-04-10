@@ -65,7 +65,7 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                         L.d(LOG_TAG, response.body().getMessage());
 
                         //将原有id保存起来，避免保存到数据库时id混乱
-                        for (Activities item : response.body().getData()) {
+                        for (Activities item : response.body().getData().getData()) {
 
                             String date = item.getTime().substring(0, 10);
                             String time = item.getTime().substring(11);
@@ -102,7 +102,7 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                             //place.save();
                             place.updateAll("newsId=?", String.valueOf(id));
                         }
-                        callback.onNewsLoaded(response.body().getData());
+                        callback.onNewsLoaded(response.body().getData().getData());
                     }
 
                     @Override
@@ -143,10 +143,10 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                     public void onResponse(Call<BannerResponse> call, Response<BannerResponse> response) {
                         L.d(LOG_TAG, response.body().getMessage());
                         L.d(LOG_TAG + "data", response.body().getData().toString());
-                        for (BannerResponse.DataBean item : response.body().getData()) {
+                        for (BannerResponse.Banner item : response.body().getData().getData()) {
                             L.d(LOG_TAG, item.getPhoto_url());
                         }
-                        callback.onUrlLoaded(response.body().getData());
+                        callback.onUrlLoaded(response.body().getData().getData());
                     }
 
                     @Override
@@ -213,13 +213,13 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                 .build();
 
         RetrofitService.SignUpService service = retrofit.create(RetrofitService.SignUpService.class);
-        service.signUp(token, itemId)
+        service.signUp(token, itemId,2)
                 .enqueue(new Callback<BaseResponse>() {
                     @Override
                     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                         if (response.isSuccessful()) {
                             L.d(LOG_TAG, response.body().getMessage());
-                            callback.onMessageLoaded(response.body().getMessage());
+                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
                         } else {
                             callback.onDataNotAvailable();
                             L.d(LOG_TAG, " error " + response.errorBody());

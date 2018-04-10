@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_add"
+        android:id="@+id/menu_back_today"
         app:showAsAction="always"
-        android:icon="@drawable/ic_add_white_36dp"
+        android:icon="@drawable/ic_event_white_24dp"
         android:title="提醒" />
 </menu>

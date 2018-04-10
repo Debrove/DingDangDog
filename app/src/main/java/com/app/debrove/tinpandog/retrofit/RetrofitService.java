@@ -25,7 +25,7 @@ import retrofit2.http.Path;
 
 public interface RetrofitService {
 
-    String URL_BASE = "http://rehellinen.cn/project/dingdang/public/";
+    String URL_BASE = "https://20298479.rehellinen.cn/dingdang/public/";
 
     interface ActivitiesNewsService {
         @GET("api/v1/allActivities")
@@ -39,7 +39,7 @@ public interface RetrofitService {
 
     interface UserService {
         @FormUrlEncoded
-        @POST("api/v1/user/register")
+        @POST("api/v1/user")
         Call<User> register(@Field("telephone") String telephone,
                             @Field("name") String name,
                             @Field("password") String password,
@@ -60,7 +60,8 @@ public interface RetrofitService {
         @FormUrlEncoded
         @POST("api/v1/enroll")
         Call<BaseResponse> signUp(@Header("token") String token,
-                                   @Field("lecture_id") int id);
+                                  @Field("lecture_id") int id,
+                                  @Field("status") int status);
     }
 
     //签到

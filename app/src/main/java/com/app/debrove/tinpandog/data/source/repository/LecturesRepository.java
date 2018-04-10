@@ -164,8 +164,8 @@ public class LecturesRepository implements LecturesDataSource {
         L.d(LOG_TAG, itemId + " " + signUp + " token " + token);
         mRemoteDataSource.signUpItem(itemId, signUp, token, new LoadMessageCallback() {
             @Override
-            public void onMessageLoaded(@NonNull String message) {
-                callback.onMessageLoaded(message);
+            public void onMessageLoaded(int status, @NonNull String message) {
+                callback.onMessageLoaded(status, message);
                 mLocalDataSource.signUpItem(itemId, signUp, token, callback);
             }
 
@@ -197,7 +197,7 @@ public class LecturesRepository implements LecturesDataSource {
     public void getImagesUrl(@NonNull final LoadBannerImagesCallback callback) {
         mRemoteDataSource.getImagesUrl(new LoadBannerImagesCallback() {
             @Override
-            public void onUrlLoaded(@NonNull List<BannerResponse.DataBean> list) {
+            public void onUrlLoaded(@NonNull List<BannerResponse.Banner> list) {
                 callback.onUrlLoaded(list);
                 L.d(LOG_TAG, " " + list);
             }

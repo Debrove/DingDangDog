@@ -48,8 +48,8 @@ public class RegisterFragment extends Fragment {
     @BindView(R.id.user_password)
     EditText mUserPassword;
     Unbinder unbinder;
-    @BindView(R.id.stu_number)
-    EditText mStuNumber;
+    @BindView(R.id.remarks)
+    EditText mRemarks;
     @BindView(R.id.phone_number)
     EditText mPhoneNumber;
     @BindView(R.id.til_phone_number)
@@ -88,7 +88,7 @@ public class RegisterFragment extends Fragment {
         final String telephone = mPhoneNumber.getText().toString().trim();
         final String password = mUserPassword.getText().toString().trim();
         final String name = mUserName.getText().toString().trim();
-        final String num = mStuNumber.getText().toString().trim();
+        final String num = mRemarks.getText().toString().trim();
 
         if (!TextUtils.isEmpty(telephone)) {
             mTilPhoneNumber.setErrorEnabled(false);
@@ -119,6 +119,9 @@ public class RegisterFragment extends Fragment {
                 public void onResponse(Call<User> call, Response<User> response) {
                     L.d("user_register", response.message() + " " + response.body());
                     Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
+
+                    //保存登陆状态
+                    ShareUtils.putBoolean(getContext(), StaticClass.SHARE_IS_LOG_IN, true);
 
                     //保留手机号，便于查询用户信息
                     ShareUtils.putString(getContext(), StaticClass.KEY_USER_TELEPHONE, telephone);

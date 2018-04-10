@@ -15,7 +15,7 @@ public interface SignUpContract {
 
         boolean isActive();
 
-        void showSignUpMessage(String message);
+        void showSignUpMessage(int status,String message);
 
         void getToken(String token);
 

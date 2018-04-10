@@ -11,7 +11,7 @@ public class LoginResponse {
     /**
      * status : 1
      * message : 登录成功
-     * data : {"token":"37a6766fc7239ea00932be1cf60c2a86"}
+     * data : {"data":"37a6766fc7239ea00932be1cf60c2a86"}
      */
 
     private String status;
@@ -44,18 +44,18 @@ public class LoginResponse {
 
     public static class DataBean {
         /**
-         * token : 37a6766fc7239ea00932be1cf60c2a86
+         * data : 37a6766fc7239ea00932be1cf60c2a86
          * 成功时
          */
 
-        private String token;
+        private String data;
 
         public String getToken() {
-            return token;
+            return data;
         }
 
         public void setToken(String token) {
-            this.token = token;
+            this.data = token;
         }
     }
 }
