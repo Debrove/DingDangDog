@@ -86,29 +86,29 @@ public class UserFragment extends Fragment implements UserContract.View {
 
         L.d(LOG_TAG, "userinfo " + userInfo);
 
-            for (User user : userInfo) {
-                name = user.getName();
-                stuNum = user.getNumber();
-            }
-            L.d(LOG_TAG,"name "+name);
-            mTelephone.setText(telephone);
-            mUserName.setText(name);
-            ShareUtils.putString(getContext(),StaticClass.KEY_USERNAME,name);
-            ShareUtils.putString(getContext(),StaticClass.KEY_STU_NUM,stuNum);
+        for (User user : userInfo) {
+            name = user.getName();
+            stuNum = user.getNumber();
+        }
+        L.d(LOG_TAG, "name " + name);
+        mTelephone.setText(telephone);
+        mUserName.setText(name);
+        ShareUtils.putString(getContext(), StaticClass.KEY_USERNAME, name);
+        ShareUtils.putString(getContext(), StaticClass.KEY_STU_NUM, stuNum);
     }
 
     @Override
     public void getToken(String token) {
         //刷新token
-        L.d(LOG_TAG," new token "+token);
+        L.d(LOG_TAG, " new token " + token);
         ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
     }
 
     @Override
     public void refreshToken() {
         mPresenter.refreshToken(telephone);
-        mPresenter.loadUserInfo(telephone,token);
-        L.d(LOG_TAG,"token in refreshing "+token);
+        mPresenter.loadUserInfo(telephone, token);
+        L.d(LOG_TAG, "token in refreshing " + token);
     }
 
 /*    private void getUserInfoFromDB() {
@@ -239,7 +239,8 @@ public class UserFragment extends Fragment implements UserContract.View {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.ll_favorite, R.id.ll_user_info,R.id.ll_user_settings,R.id.ll_attended})
+    @OnClick({R.id.ll_favorite, R.id.ll_user_info, R.id.ll_user_settings, R.id.ll_attended,
+            R.id.ll_cards, R.id.ll_comment, R.id.ll_notes})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_favorite:
@@ -260,6 +261,11 @@ public class UserFragment extends Fragment implements UserContract.View {
             case R.id.ll_attended:
                 Intent intent3 = new Intent(getActivity(), AttendedActivity.class);
                 startActivity(intent3);
+                break;
+            case R.id.ll_cards:
+            case R.id.ll_comment:
+            case R.id.ll_notes:
+                Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

@@ -38,6 +38,8 @@ public class Activities extends DataSupport {
 
     private boolean pre_sign_up;
 
+    private boolean sign_in;//是否签到
+
     @Column(unique = true)
     private int newsId;
 
@@ -127,6 +129,14 @@ public class Activities extends DataSupport {
 
     public void setPre_sign_up(boolean pre_sign_up) {
         this.pre_sign_up = pre_sign_up;
+    }
+
+    public boolean isSign_in() {
+        return sign_in;
+    }
+
+    public void setSign_in(boolean sign_in) {
+        this.sign_in = sign_in;
     }
 
     public String getHolder() {

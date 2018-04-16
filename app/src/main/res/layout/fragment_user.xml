@@ -111,6 +111,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_comment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -144,6 +145,7 @@
             android:showDividers="middle">
 
             <LinearLayout
+                android:id="@+id/ll_cards"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/colorBaseBackground"
@@ -193,6 +195,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_notes"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/colorBaseBackground"

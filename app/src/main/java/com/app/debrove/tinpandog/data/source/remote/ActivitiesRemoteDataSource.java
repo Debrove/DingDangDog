@@ -67,6 +67,8 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                         //将原有id保存起来，避免保存到数据库时id混乱
                         for (Activities item : response.body().getData().getData()) {
 
+//                            L.d(LOG_TAG,item.getPlace_id().getName()+" place");
+
                             String date = item.getTime().substring(0, 10);
                             String time = item.getTime().substring(11);
 
@@ -93,13 +95,13 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
 
                             //将地点与newsId关联起来,保存地点数据
                             Place place = new Place();
-//                            L.d(LOG_TAG,item.getPlace_id()+"  "+item.getPlace_id().getName());
+                            L.d(LOG_TAG,item.getPlace_id()+"  "+item.getPlace_id().getName());
                             place.setNewsId(id);
                             place.setName(item.getPlace_id().getName());
                             place.setId(item.getPlace_id().getId());
                             place.setMax(item.getPlace_id().getMax());
                             place.setStatus(item.getPlace_id().getStatus());
-                            //place.save();
+                            place.save();
                             place.updateAll("newsId=?", String.valueOf(id));
                         }
                         callback.onNewsLoaded(response.body().getData().getData());
@@ -229,6 +231,34 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
                     @Override
                     public void onFailure(Call<BaseResponse> call, Throwable throwable) {
                         L.d(LOG_TAG, throwable.toString());
+                        callback.onDataNotAvailable();
+                    }
+                });
+    }
+
+    @Override
+    public void signInItem(int itemId, String address, boolean signIn, String token, final LoadMessageCallback callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RetrofitService.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitService.SignInService service = retrofit.create(RetrofitService.SignInService.class);
+        service.signIn(token,itemId,address)
+                .enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        if (response.isSuccessful()) {
+                            L.d(LOG_TAG, response.body().getMessage());
+                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
+                        } else {
+                            callback.onDataNotAvailable();
+                            L.d(LOG_TAG, " error " + response.errorBody());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
                         callback.onDataNotAvailable();
                     }
                 });

@@ -64,9 +64,9 @@ public class LecturesLocalDataSource implements LecturesDataSource {
 
     @Override
     public void getAllNewsSignedUp(@NonNull LoadNewsCallback callback) {
-        List<Lectures> allLecturesSignedUp=DataSupport.where("pre_sign_up = ?","1").find(Lectures.class);
+        List<Lectures> allLecturesSignedUp = DataSupport.where("pre_sign_up = ?", "1").find(Lectures.class);
         callback.onNewsLoaded(allLecturesSignedUp);
-        L.d(LOG_TAG," all signed up "+allLecturesSignedUp);
+        L.d(LOG_TAG, " all signed up " + allLecturesSignedUp);
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.app.debrove.tinpandog.data.ContentType;
 import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.details.DetailsActivity;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
+import com.app.debrove.tinpandog.util.GetInfos;
 import com.app.debrove.tinpandog.util.L;
 
 import java.util.List;
@@ -152,7 +153,7 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, activitiesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, activitiesList.get(mAdapter.getOriginalIndex(position)).isFavourite());
 
-                        String place = mAdapter.getPlace(activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+                        String place = GetInfos.getPlace(activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
 
                         startActivity(intent);
@@ -167,7 +168,7 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, lecturesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, lecturesList.get(mAdapter.getOriginalIndex(position)).isFavorite());
 
-                        String place = mAdapter.getPlace(lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+                        String place = GetInfos.getPlace(lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
                         intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
                         startActivity(intent);
                     }

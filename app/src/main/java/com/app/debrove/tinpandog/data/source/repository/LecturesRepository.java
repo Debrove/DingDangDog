@@ -119,6 +119,7 @@ public class LecturesRepository implements LecturesDataSource {
             @Override
             public void onNewsLoaded(@NonNull List<Lectures> lecturesList) {
                 callback.onNewsLoaded(lecturesList);
+                L.d(LOG_TAG," all lectures "+lecturesList);
             }
 
             @Override

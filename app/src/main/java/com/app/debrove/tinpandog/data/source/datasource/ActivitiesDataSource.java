@@ -52,6 +52,8 @@ public interface ActivitiesDataSource {
 
     void signUpItem(int itemId, boolean signUp, String token,LoadMessageCallback callback);
 
+    void signInItem(int itemId, String address, boolean signIn, String token,LoadMessageCallback callback);
+
     void saveAll(@NonNull List<Activities> list);
 
     void updateAll(@NonNull List<Activities> list);

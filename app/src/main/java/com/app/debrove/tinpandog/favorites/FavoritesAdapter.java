@@ -278,15 +278,15 @@ class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public String getPlace(int id){
-        String name="未知";
-        List<Place> list= DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
-        L.d(LOG_TAG,"list "+list+ "size "+list.size());
-        for (Place place1:list){
-            name= place1.getName();
-            L.d(LOG_TAG," name "+name);
-        }
-        return name;
-    }
+//    public String getPlace(int id){
+//        String name="未知";
+//        List<Place> list= DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
+//        L.d(LOG_TAG,"list "+list+ "size "+list.size());
+//        for (Place place1:list){
+//            name= place1.getName();
+//            L.d(LOG_TAG," name "+name);
+//        }
+//        return name;
+//    }
 }
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.app.debrove.tinpandog.R;
 import com.app.debrove.tinpandog.data.Activities;
+import com.app.debrove.tinpandog.data.ContentType;
 import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
 import com.app.debrove.tinpandog.signup.SignInActivity;
@@ -125,6 +126,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View,
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mPresenter.loadAll();
                 setLoadingIndicator(false);
             }
         });
@@ -134,7 +136,7 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View,
     }
 
     @Override
-    public void showList(final List<Activities> activitiesList, List<Lectures> lecturesList) {
+    public void showList(final List<Activities> activitiesList, final List<Lectures> lecturesList) {
         if (activitiesList == null && lecturesList == null) {
             mEmptyView.setVisibility(View.VISIBLE);
             setLoadingIndicator(false);
@@ -151,16 +153,38 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View,
             mAdapter.setItemClickListener(new OnRecyclerViewItemOnClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
+                    int viewType = mAdapter.getItemViewType(position);
+                    L.d(LOG_TAG,"viewType "+viewType+" "+ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES);
+
                     switch (v.getId()) {
                         case R.id.btn_sign_in:
                             L.d("signIN", "signIn "+position);
-//                            L.d(LOG_TAG,"schedule info "+activitiesList.get(position).getPlace_id().getName()+
-//                            "id "+activitiesList.get(position).getPlace_id().getId());
-//                            Intent intent = new Intent(getContext(), SignInActivity.class);
-//                            startActivity(intent);
+//                            L.d(LOG_TAG,activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId()+
+//                                    " id "+ lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+
+                            if (viewType == ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES){
+                                Intent intent = new Intent(getContext(), SignInActivity.class);
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID,activitiesList.
+                                        get(mAdapter.getOriginalIndex(position)).getNewsId());
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
+                                startActivity(intent);
+                            }else if (viewType == ScheduleAdapter.ItemWrapper.TYPE_LECTURES){
+                                Intent intent = new Intent(getContext(), SignInActivity.class);
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID,lecturesList.
+                                        get(mAdapter.getOriginalIndex(position)).getNewsId());
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
+                                startActivity(intent);
+                            }
                             
                             break;
+                        case R.id.btn_share:
+                            Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.btn_comment:
+                            Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
+                            break;
                         default:
+                            Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }

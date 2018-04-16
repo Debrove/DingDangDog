@@ -186,6 +186,21 @@ public class ActivitiesRepository implements ActivitiesDataSource {
     }
 
     @Override
+    public void signInItem(int itemId, String address, boolean signIn, String token, final LoadMessageCallback callback) {
+        mRemoteDataSource.signInItem(itemId, address, signIn, token, new LoadMessageCallback() {
+            @Override
+            public void onMessageLoaded(int status, @NonNull String message) {
+                callback.onMessageLoaded(status,message);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
+    @Override
     public void saveAll(@NonNull List<Activities> list) {
         mLocalDataSource.saveAll(list);
         mRemoteDataSource.saveAll(list);

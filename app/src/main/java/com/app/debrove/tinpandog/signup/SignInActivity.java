@@ -16,6 +16,7 @@ import com.app.debrove.tinpandog.data.ContentType;
 public class SignInActivity extends AppCompatActivity {
 
     public static final String KEY_ARTICLE_TYPE = "KEY_ARTICLE_TYPE";
+    public static final String KEY_ARTICLE_ID = "KEY_ARTICLE_ID";
 
     private SignInFragment mSignInFragment;
 

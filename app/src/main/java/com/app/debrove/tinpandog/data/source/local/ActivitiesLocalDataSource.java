@@ -149,6 +149,11 @@ public class ActivitiesLocalDataSource implements ActivitiesDataSource {
     }
 
     @Override
+    public void signInItem(int itemId, String address, boolean signIn, String token, LoadMessageCallback callback) {
+
+    }
+
+    @Override
     public void saveAll(@NonNull final List<Activities> list) {
 
         DataSupport.saveAllAsync(list).listen(new SaveCallback() {

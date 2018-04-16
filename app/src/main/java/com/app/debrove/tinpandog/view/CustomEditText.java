@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -99,8 +100,8 @@ public class CustomEditText extends LinearLayout implements TextWatcher, View.On
         //@SuppressLint({"Recycle", "CustomViewStyleable"})
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.customEditText);
         mEtNumber = typedArray.getInteger(R.styleable.customEditText_et_number, 4);
-        //int inputType = typedArray.getInt(R.styleable.vericationCodeView_vcv_et_inputType, VCInputType.NUMBER.ordinal());
-        //mEtInputType = VCInputType.values()[inputType];
+//        int inputType = typedArray.getInt(R.styleable.vericationCodeView_vcv_et_inputType, VCInputType.NUMBER.ordinal());
+//        mEtInputType = VCInputType.values()[inputType];
         mEtWidth = typedArray.getDimensionPixelSize(R.styleable.customEditText_et_width, 120);
         mEtTextColor = typedArray.getColor(R.styleable.customEditText_et_text_color, Color.BLACK);
         mEtTextSize = typedArray.getDimensionPixelSize(R.styleable.customEditText_et_text_size, 16);
@@ -146,6 +147,7 @@ public class CustomEditText extends LinearLayout implements TextWatcher, View.On
         editText.setPadding(0, 0, 0, 0);
         editText.setOnKeyListener(this);
         editText.setBackgroundResource(mEtTextBg);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         //修改光标的颜色（反射）
         try {

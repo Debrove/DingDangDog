@@ -16,6 +16,7 @@ import com.app.debrove.tinpandog.data.Lectures;
 import com.app.debrove.tinpandog.data.Place;
 import com.app.debrove.tinpandog.interfaze.OnRecyclerViewItemOnClickListener;
 import com.app.debrove.tinpandog.util.DateFormatUtils;
+import com.app.debrove.tinpandog.util.GetInfos;
 import com.app.debrove.tinpandog.util.L;
 import com.ldf.calendar.model.CalendarDate;
 
@@ -71,12 +72,16 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 iw.index = i;
                 mWrapperList.add(iw);
             }
-        } else if (!mLecturesList.isEmpty()) {
-            L.d(LOG_TAG, "lecture not empty ");
-            for (int i = 0; i < mLecturesList.size(); i++) {
-                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
-                iw.index = i;
-                mWrapperList.add(iw);
+
+            if (!mLecturesList.isEmpty()) {
+                L.d(LOG_TAG, "lecture not empty ");
+                for (int i = 0; i < mLecturesList.size(); i++) {
+                    ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                    iw.index = i;
+                    mWrapperList.add(iw);
+                    L.d(LOG_TAG, mWrapperList + " ");
+                }
+
             }
         }
 
@@ -107,8 +112,8 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        String date, time, time2,currentDate3;
-        long date1, currentDate1, currentTime, time1,currentDate2;
+        String date, time, time2, currentDate3;
+        long date1, currentDate1, currentTime, time1, currentDate2;
         String month;
         String day;
         Date currentDate = new Date();
@@ -120,7 +125,8 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Activities activitiesItem = mActivitiesList.get(iw.index);
                 viewHolder.title.setText(activitiesItem.getTitle());
                 viewHolder.sponsor.setText(activitiesItem.getHolder());
-                viewHolder.place.setText(getPlace(activitiesItem.getNewsId()));
+                L.d(LOG_TAG, activitiesItem.getNewsId() + " ");
+                viewHolder.place.setText(GetInfos.getPlace(activitiesItem.getNewsId()));
 
                 //时间格式化
                 date = activitiesItem.getTime();//news日期
@@ -129,10 +135,10 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 currentDate1 = DateFormatUtils.formatSystemDateStringToLong(String.valueOf(currentDate));//当前日期时间戳
                 month = DateFormatUtils.getMonth(date1);//news月份
                 day = DateFormatUtils.getDay(date1);//news day
-                time2=DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
-                currentTime =DateFormatUtils.formatNewsTimeStringToLong(time2);//只包含时分的当前时间戳
-                currentDate3=DateFormatUtils.formatNewsDateLongToString(currentDate1);//当前年月日
-                currentDate2=DateFormatUtils.formatNewsDateStringToLong(currentDate3);//只包含年月日的当前时间戳
+                time2 = DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
+                currentTime = DateFormatUtils.formatNewsTimeStringToLong(time2);//只包含时分的当前时间戳
+                currentDate3 = DateFormatUtils.formatNewsDateLongToString(currentDate1);//当前年月日
+                currentDate2 = DateFormatUtils.formatNewsDateStringToLong(currentDate3);//只包含年月日的当前时间戳
 
                 L.d(LOG_TAG, " 当前时分：" + DateFormatUtils.formatNewsTimeLongToString(currentTime));
                 time1 = DateFormatUtils.formatNewsTimeStringToLong(time);//news时分的时间戳
@@ -140,9 +146,9 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 viewHolder.showMonthView.setText(month);
                 viewHolder.showDayView.setText(day + mContext.getString(R.string.tv_day));
                 viewHolder.time.setText(activitiesItem.getTime1());
-                L.d(LOG_TAG, " place " + getPlace(activitiesItem.getNewsId()) + " " + getPlace(activitiesItem.getId()));
+                L.d(LOG_TAG, " place " + GetInfos.getPlace(activitiesItem.getNewsId()) + " " + GetInfos.getPlace(activitiesItem.getId()));
                 L.d(LOG_TAG, "date " + date + " Month " + month + " Day " + day + " currentDate " + currentDate + " currentDate1 " + currentDate1 +
-                        " currentTime " + currentTime +" date1 "+date1 +" currentDate2 " + currentDate2+" time1 "+time1);
+                        " currentTime " + currentTime + " date1 " + date1 + " currentDate2 " + currentDate2 + " time1 " + time1);
 
                 if (date1 - currentDate2 > 0) {
                     viewHolder.start.setText("未开始");
@@ -150,7 +156,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder.start.setText("已结束");
                     viewHolder.signIn.setClickable(false);
                     viewHolder.signIn.setTextColor(Color.GRAY);
-                } else if (date1 == currentDate2){
+                } else if (date1 == currentDate2) {
                     if (time1 > currentTime) {
                         viewHolder.start.setText("未开始");
                     } else if (time1 < currentTime) {
@@ -164,7 +170,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Lectures lecturesItem = mLecturesList.get(iw.index);
                 viewHolder1.title.setText(lecturesItem.getTitle());
                 viewHolder1.sponsor.setText(lecturesItem.getHolder());
-                viewHolder1.place.setText(getPlace(lecturesItem.getNewsId()));
+                viewHolder1.place.setText(GetInfos.getPlace(lecturesItem.getNewsId()));
 
                 //时间格式化
                 date = lecturesItem.getTime();//news日期
@@ -173,18 +179,22 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 currentDate1 = DateFormatUtils.formatSystemDateStringToLong(String.valueOf(currentDate));//当前日期时间戳
                 month = DateFormatUtils.getMonth(date1);//news月份
                 day = DateFormatUtils.getDay(date1);//news day
-                time2=DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
+                time2 = DateFormatUtils.formatNewsTimeLongToString(currentDate1);//当前时分
                 currentTime = DateFormatUtils.formatNewsTimeStringToLong(time2);//只包含时分的当前时间戳
-                currentDate2=currentDate1/100000*100000;//只包含年月日的当前时间戳
+                currentDate3 = DateFormatUtils.formatNewsDateLongToString(currentDate1);//当前年月日
+                currentDate2 = DateFormatUtils.formatNewsDateStringToLong(currentDate3);//只包含年月日的当前时间戳
+
+                L.d(LOG_TAG, " 当前时分：" + DateFormatUtils.formatNewsTimeLongToString(currentTime));
                 time1 = DateFormatUtils.formatNewsTimeStringToLong(time);//news时分的时间戳
 
                 viewHolder1.showMonthView.setText(month);
                 viewHolder1.showDayView.setText(day + mContext.getString(R.string.tv_day));
                 viewHolder1.time.setText(lecturesItem.getTime1());
 
-                L.d(LOG_TAG, " place " + getPlace(lecturesItem.getNewsId()) + " " + getPlace(lecturesItem.getId()));
+                L.d(LOG_TAG, " place " + GetInfos.getPlace(lecturesItem.getNewsId()) + " " + GetInfos.getPlace(lecturesItem.getId()));
                 L.d(LOG_TAG, "date " + date + " Month " + month + " Day " + day + " currentDate " + currentDate + " currentDate1 " + currentDate1 +
-                        " currentTime " + currentTime);
+                        " currentTime " + currentTime + " date1 " + date1 + " currentDate2 " + currentDate2 + " time1 " + time1);
+
 
                 if (date1 - currentDate2 > 0) {
                     viewHolder1.start.setText("未开始");
@@ -192,7 +202,7 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     viewHolder1.start.setText("已结束");
                     viewHolder1.signIn.setClickable(false);
                     viewHolder1.signIn.setTextColor(Color.GRAY);
-                } else if (date1 == currentDate2){
+                } else if (date1 == currentDate2) {
                     if (time1 > currentTime) {
                         viewHolder1.start.setText("未开始");
                     } else if (time1 < currentTime) {
@@ -210,6 +220,11 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //return (mActivitiesList.isEmpty() && mLecturesList.isEmpty()) ? 0 : mActivitiesList.size() + mLecturesList.size();
         return mWrapperList == null ? 0 : mWrapperList.size();
     }
+
+    public int getOriginalIndex(int position) {
+        return mWrapperList.get(position).index;
+    }
+
 
     private int getActivitiesSize() {
         return mActivitiesList.isEmpty() ? 0 : mActivitiesList.size();
@@ -286,28 +301,28 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mWrapperList.add(iw);
                 mActivitiesList.add(activitiesList.get(i));
             }
-        } else if (!lecturesList.isEmpty()) {
-            L.d(LOG_TAG, "update:lecture not empty ");
-            for (int i = 0; i < lecturesList.size(); i++) {
-                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
-                iw.index = i;
-                mWrapperList.add(iw);
-                mLecturesList.add(lecturesList.get(i));
+
+            if (!lecturesList.isEmpty()) {
+                L.d(LOG_TAG, "update:lecture not empty ");
+                for (int i = 0; i < lecturesList.size(); i++) {
+                    ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                    iw.index = i;
+                    mWrapperList.add(iw);
+                    mLecturesList.add(lecturesList.get(i));
+                }
             }
         }
-
-
         notifyDataSetChanged();
     }
 
-    private String getPlace(int id) {
-        String name = "未知";
-        List<Place> list = DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
-        L.d(LOG_TAG, "list " + list + "size " + list.size());
-        for (Place place1 : list) {
-            name = place1.getName();
-            L.d(LOG_TAG, " name " + name);
-        }
-        return name;
-    }
+//    private String getPlace(int id) {
+//        String name = "未知";
+//        List<Place> list = DataSupport.where("newsId = ?", String.valueOf(id)).find(Place.class);
+//        L.d(LOG_TAG, "list " + list + "size " + list.size());
+//        for (Place place1 : list) {
+//            name = place1.getName();
+//            L.d(LOG_TAG, " name " + name);
+//        }
+//        return name;
+//    }
 }

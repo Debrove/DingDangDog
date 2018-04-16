@@ -6,7 +6,7 @@
         android:title="我"/>
 
     <item
-        android:id="@+id/drawer_activities"
+        android:id="@+id/drawer_attended"
         android:icon="@drawable/star"
         android:title="参加过的活动"/>
     <item

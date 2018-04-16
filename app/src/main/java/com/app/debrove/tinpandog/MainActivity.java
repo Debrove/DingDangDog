@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.app.debrove.tinpandog.data.source.local.ActivitiesLocalDataSource;
 import com.app.debrove.tinpandog.data.source.local.LecturesLocalDataSource;
@@ -32,6 +33,8 @@ import com.app.debrove.tinpandog.reminder.ActivityReminder;
 import com.app.debrove.tinpandog.schedule.ScheduleFragment;
 import com.app.debrove.tinpandog.schedule.SchedulePresenter;
 import com.app.debrove.tinpandog.signup.SignInActivity;
+import com.app.debrove.tinpandog.user.AttendedActivity;
+import com.app.debrove.tinpandog.user.SettingsActivity;
 import com.app.debrove.tinpandog.user.UserFragment;
 import com.app.debrove.tinpandog.user.UserInfoActivity;
 import com.app.debrove.tinpandog.user.UserPresenter;
@@ -255,7 +258,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent2 = new Intent(this, SignInActivity.class);
                 startActivity(intent2);
                 mDrawer.closeDrawers();
+                break;
+            case R.id.setting:
+                Intent intent3 = new Intent(this, SettingsActivity.class);
+                startActivity(intent3);
+                mDrawer.closeDrawers();
+                break;
+            case R.id.drawer_attended:
+                Intent intent4 = new Intent(this, AttendedActivity.class);
+                startActivity(intent4);
+                mDrawer.closeDrawers();
+                break;
             default:
+                Toast.makeText(this, "敬请期待", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

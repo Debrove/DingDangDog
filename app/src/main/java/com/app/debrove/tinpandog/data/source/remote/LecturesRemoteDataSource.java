@@ -16,6 +16,7 @@ import com.app.debrove.tinpandog.util.L;
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,17 +63,22 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                         //将原有id保存起来，避免保存到数据库时id混乱
                         for (Lectures item : response.body().getData().getData()) {
 
-                            String date = item.getTime().substring(0, 10);
-                            String time = item.getTime().substring(11);
+                            //处理不同消息时间
+                            if (Objects.equals(item.getPlace_id().getName(), "网申")) {
+                                item.setTime(item.getTime());
+                            } else {
+                                String date = item.getTime().substring(0, 10);
+                                String time = item.getTime().substring(11);
 
+                                L.d(LOG_TAG, "date and time " + item.getTime() + " date " + date + " time1 " + time);
+                                item.setTime(date);
+                                item.setTime1(time);
+                            }
                             int id = item.getId();
                             L.d(LOG_TAG, "original id" + id);
                             item.setNewsId(id);
                             L.d(LOG_TAG, "news id saved" + item.getNewsId());
 
-                            L.d(LOG_TAG, "date and time " + item.getTime() + " date " + date + " time1 " + time);
-                            item.setTime(date);
-                            item.setTime1(time);
                             item.setDetail(item.getDetail());
                             item.setHolder(item.getHolder());
                             item.setPhoto_url(item.getPhoto_url());
@@ -82,7 +88,7 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                             item.updateAll("newsId=?", String.valueOf(id));
 
                             //将地点与newsId关联起来,保存地点数据
-                            Place place=new Place();
+                            Place place = new Place();
 //                            L.d(LOG_TAG,item.getPlace_id()+"  "+item.getPlace_id().getName());
                             place.setNewsId(id);
                             place.setName(item.getPlace_id().getName());
@@ -134,16 +140,16 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                 .build();
 
         RetrofitService.SignUpService service = retrofit.create(RetrofitService.SignUpService.class);
-        service.signUp(token, itemId,1)
+        service.signUp(token, itemId, 1)
                 .enqueue(new Callback<BaseResponse>() {
                     @Override
                     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                         if (response.isSuccessful()) {
                             L.d(LOG_TAG, response.body().getMessage());
-                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
+                            callback.onMessageLoaded(response.body().getStatus(), response.body().getMessage());
                         } else {
                             callback.onDataNotAvailable();
-                            L.d(LOG_TAG,response.errorBody()+ "");
+                            L.d(LOG_TAG, response.errorBody() + "");
                         }
                     }
 
