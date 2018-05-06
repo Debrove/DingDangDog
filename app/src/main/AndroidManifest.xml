@@ -24,6 +24,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -32,6 +35,20 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- 设置百度地图的AppKey -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="C1wZmTLudZpllWSig3enXH3DdyBqg9sT">
+
+        </meta-data>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
+
+        </service>
 
         <!-- 设置环信应用的AppKey -->
         <meta-data
@@ -84,7 +101,7 @@
 
         <activity android:name=".user.AttendedActivity" />
 
-        <receiver android:name=".reminder.RemindBroadcastReceiver"/>
+        <receiver android:name=".reminder.RemindBroadcastReceiver" />
     </application>
 
 </manifest>

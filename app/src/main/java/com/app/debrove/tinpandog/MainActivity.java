@@ -1,13 +1,17 @@
 package com.app.debrove.tinpandog;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     NewsFragment mNewsFragment;
     ScheduleFragment mScheduleFragment;
-    GroupsFragment mGroupsFragment;
+//    GroupsFragment mGroupsFragment;
     UserFragment mUserFragment;
 
     @BindView(R.id.bottom_navigation)
@@ -102,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.bottom_menu_schedule:
                     showFragment(mScheduleFragment);
                     break;
-                case R.id.bottom_menu_groups:
-                    showFragment(mGroupsFragment);
-                    break;
+//                case R.id.bottom_menu_groups:
+//                    showFragment(mGroupsFragment);
+//                    break;
                 case R.id.bottom_menu_user:
                     showFragment(mUserFragment);
                     break;
@@ -124,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     case R.id.bottom_menu_schedule:
                         showFragment(mScheduleFragment);
                         break;
-                    case R.id.bottom_menu_groups:
-                        showFragment(mGroupsFragment);
-                        break;
+//                    case R.id.bottom_menu_groups:
+//                        showFragment(mGroupsFragment);
+//                        break;
                     case R.id.bottom_menu_user:
                         showFragment(mUserFragment);
                         break;
@@ -166,9 +170,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mScheduleFragment.isAdded()) {
             fm.putFragment(outState, ScheduleFragment.class.getSimpleName(), mScheduleFragment);
         }
-        if (mGroupsFragment.isAdded()) {
-            fm.putFragment(outState, GroupsFragment.class.getSimpleName(), mGroupsFragment);
-        }
+//        if (mGroupsFragment.isAdded()) {
+//            fm.putFragment(outState, GroupsFragment.class.getSimpleName(), mGroupsFragment);
+//        }
         if (mUserFragment.isAdded()) {
             fm.putFragment(outState, UserFragment.class.getSimpleName(), mUserFragment);
         }
@@ -180,12 +184,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //初始化Fragment
             mNewsFragment = NewsFragment.newInstance();
             mScheduleFragment = ScheduleFragment.newInstance();
-            mGroupsFragment = GroupsFragment.newInstance();
+//            mGroupsFragment = GroupsFragment.newInstance();
             mUserFragment = UserFragment.newInstance();
         } else {
             mNewsFragment = (NewsFragment) fm.getFragment(savedInstanceState, NewsFragment.class.getSimpleName());
             mScheduleFragment = (ScheduleFragment) fm.getFragment(savedInstanceState, ScheduleFragment.class.getSimpleName());
-            mGroupsFragment = (GroupsFragment) fm.getFragment(savedInstanceState, GroupsFragment.class.getSimpleName());
+//            mGroupsFragment = (GroupsFragment) fm.getFragment(savedInstanceState, GroupsFragment.class.getSimpleName());
             mUserFragment = (UserFragment) fm.getFragment(savedInstanceState, UserFragment.class.getSimpleName());
         }
         //添加Fragment
@@ -199,11 +203,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.container, mScheduleFragment, ScheduleFragment.class.getSimpleName())
                     .commit();
         }
-        if (!mGroupsFragment.isAdded()) {
-            fm.beginTransaction()
-                    .add(R.id.container, mGroupsFragment, GroupsFragment.class.getSimpleName())
-                    .commit();
-        }
+//        if (!mGroupsFragment.isAdded()) {
+//            fm.beginTransaction()
+//                    .add(R.id.container, mGroupsFragment, GroupsFragment.class.getSimpleName())
+//                    .commit();
+//        }
         if (!mUserFragment.isAdded()) {
             fm.beginTransaction()
                     .add(R.id.container, mUserFragment, UserFragment.class.getSimpleName())
@@ -217,26 +221,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment instanceof NewsFragment) {
             fm.beginTransaction().show(mNewsFragment)
                     .hide(mScheduleFragment)
-                    .hide(mGroupsFragment)
+//                    .hide(mGroupsFragment)
                     .hide(mUserFragment)
                     .commit();
         } else if (fragment instanceof ScheduleFragment) {
             fm.beginTransaction().show(mScheduleFragment)
                     .hide(mNewsFragment)
-                    .hide(mGroupsFragment)
+//                    .hide(mGroupsFragment)
                     .hide(mUserFragment)
                     .commit();
-        } else if (fragment instanceof GroupsFragment) {
-            fm.beginTransaction().show(mGroupsFragment)
-                    .hide(mNewsFragment)
-                    .hide(mScheduleFragment)
-                    .hide(mUserFragment)
-                    .commit();
-        } else if (fragment instanceof UserFragment) {
+        }
+//        else if (fragment instanceof GroupsFragment) {
+//            fm.beginTransaction().show(mGroupsFragment)
+//                    .hide(mNewsFragment)
+//                    .hide(mScheduleFragment)
+//                    .hide(mUserFragment)
+//                    .commit();
+//        }
+        else if (fragment instanceof UserFragment) {
             fm.beginTransaction().show(mUserFragment)
                     .hide(mNewsFragment)
                     .hide(mScheduleFragment)
-                    .hide(mGroupsFragment)
+//                    .hide(mGroupsFragment)
                     .commit();
         }
     }
@@ -245,20 +251,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_user:
-                Intent intent=new Intent(this,UserInfoActivity.class);
-                startActivity(intent);
-                mDrawer.closeDrawers();
+//                Intent intent=new Intent(this,UserInfoActivity.class);
+//                startActivity(intent);
+//                mDrawer.closeDrawers();
                 break;
             case R.id.drawer_favorite:
                 Intent intent1 = new Intent(this, FavoritesActivity.class);
                 startActivity(intent1);
                 mDrawer.closeDrawers();
                 break;
-            case R.id.drawer_sign_in:
-                Intent intent2 = new Intent(this, SignInActivity.class);
-                startActivity(intent2);
-                mDrawer.closeDrawers();
-                break;
+//            case R.id.drawer_sign_in:
+//                Intent intent2 = new Intent(this, SignInActivity.class);
+//                startActivity(intent2);
+//                mDrawer.closeDrawers();
+//                break;
             case R.id.setting:
                 Intent intent3 = new Intent(this, SettingsActivity.class);
                 startActivity(intent3);

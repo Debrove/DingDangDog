@@ -74,7 +74,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View, Too
         });
         mToolbarGroups.setOnMenuItemClickListener(this);
         mDrawerLayout = getActivity().findViewById(R.id.drawer);
-        showNoticeInfo();
+        //showNoticeInfo();
     }
 
     /**
@@ -117,9 +117,7 @@ public class GroupsFragment extends Fragment implements GroupsContract.View, Too
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add:
-                Toast.makeText(getContext(), "add", Toast.LENGTH_SHORT).show();
-                break;
+
         }
         return true;
     }

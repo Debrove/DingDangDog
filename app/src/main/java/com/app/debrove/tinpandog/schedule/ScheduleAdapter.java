@@ -65,7 +65,8 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (mActivitiesList.isEmpty() && mLecturesList.isEmpty()) {
             mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
             L.d(LOG_TAG, "all empty ");
-        } else if (!mActivitiesList.isEmpty()) {
+        } else if (!mActivitiesList.isEmpty() && !mLecturesList.isEmpty()) {
+
             L.d(LOG_TAG, "activity not empty ");
             for (int i = 0; i < mActivitiesList.size(); i++) {
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
@@ -73,15 +74,28 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mWrapperList.add(iw);
             }
 
-            if (!mLecturesList.isEmpty()) {
-                L.d(LOG_TAG, "lecture not empty ");
-                for (int i = 0; i < mLecturesList.size(); i++) {
-                    ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
-                    iw.index = i;
-                    mWrapperList.add(iw);
-                    L.d(LOG_TAG, mWrapperList + " ");
-                }
+            L.d(LOG_TAG, "lecture not empty ");
+            for (int i = 0; i < mLecturesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                iw.index = i;
+                mWrapperList.add(iw);
+                L.d(LOG_TAG, mWrapperList + " ");
+            }
 
+        } else if (!mLecturesList.isEmpty()) {
+            L.d(LOG_TAG, "lecture not empty ");
+            for (int i = 0; i < mLecturesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                iw.index = i;
+                mWrapperList.add(iw);
+                L.d(LOG_TAG, mWrapperList + " ");
+            }
+        } else if (!mActivitiesList.isEmpty()) {
+            L.d(LOG_TAG, "activity not empty ");
+            for (int i = 0; i < mActivitiesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
+                iw.index = i;
+                mWrapperList.add(iw);
             }
         }
 
@@ -290,26 +304,45 @@ class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mLecturesList.clear();
         mWrapperList.clear();
 
+        L.d(LOG_TAG, "update all" + activitiesList + " " + lecturesList);
+
         if (activitiesList.isEmpty() && lecturesList.isEmpty()) {
             mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
             L.d(LOG_TAG, "update:all empty ");
-        } else if (!activitiesList.isEmpty()) {
+        } else if (!activitiesList.isEmpty() && !lecturesList.isEmpty()) {
+
+            L.d(LOG_TAG, "update:activity not empty ");
             for (int i = 0; i < activitiesList.size(); i++) {
-                L.d(LOG_TAG, "update:activity not empty ");
                 ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
                 iw.index = i;
                 mWrapperList.add(iw);
                 mActivitiesList.add(activitiesList.get(i));
             }
 
-            if (!lecturesList.isEmpty()) {
-                L.d(LOG_TAG, "update:lecture not empty ");
-                for (int i = 0; i < lecturesList.size(); i++) {
-                    ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
-                    iw.index = i;
-                    mWrapperList.add(iw);
-                    mLecturesList.add(lecturesList.get(i));
-                }
+            L.d(LOG_TAG, "update:lecture not empty ");
+            for (int i = 0; i < lecturesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                iw.index = i;
+                mWrapperList.add(iw);
+                mLecturesList.add(lecturesList.get(i));
+            }
+
+        } else if (!lecturesList.isEmpty()) {
+            L.d(LOG_TAG, "update:lecture not empty ");
+            for (int i = 0; i < lecturesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_LECTURES);
+                iw.index = i;
+                mWrapperList.add(iw);
+                mLecturesList.add(lecturesList.get(i));
+            }
+        } else if (!activitiesList.isEmpty()) {
+
+            L.d(LOG_TAG, "update:activity not empty ");
+            for (int i = 0; i < activitiesList.size(); i++) {
+                ItemWrapper iw = new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES);
+                iw.index = i;
+                mWrapperList.add(iw);
+                mActivitiesList.add(activitiesList.get(i));
             }
         }
         notifyDataSetChanged();

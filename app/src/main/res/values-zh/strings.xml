@@ -10,7 +10,7 @@
     <string name="lectures_news">讲座</string>
     <string name="empty_content">您还没有收藏内容</string>
     <string name="empty_schedule">今天没有任务，好好休息吧</string>
-    <string name="no_favorites">收藏为空</string>
+    <string name="no_favorites">空空如也</string>
     <string name="image_view_cover_desc">收藏图</string>
     <string name="remember_password">记住密码</string>
     <string name="userinfo">个人资料</string>

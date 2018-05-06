@@ -64,7 +64,8 @@ public class LecturesRemoteDataSource implements LecturesDataSource {
                         for (Lectures item : response.body().getData().getData()) {
 
                             //处理不同消息时间
-                            if (Objects.equals(item.getPlace_id().getName(), "网申")) {
+                            if (Objects.equals(item.getPlace_id().getName(), "网申") ||
+                                    Objects.equals(item.getPlace_id().getName(), "暨南大学珠海校区北门")) {
                                 item.setTime(item.getTime());
                             } else {
                                 String date = item.getTime().substring(0, 10);

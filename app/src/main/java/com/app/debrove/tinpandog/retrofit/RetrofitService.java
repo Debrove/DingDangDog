@@ -70,7 +70,8 @@ public interface RetrofitService {
         @POST("api/v1/Attendance")
         Call<BaseResponse> signIn(@Header("token") String token,
                                   @Field("lecture_id") int id,
-                                  @Field("address") String address);
+                                  @Field("lng") double lng,
+                                  @Field("lat") double lat);
     }
 
     interface BannerService {

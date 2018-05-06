@@ -238,30 +238,30 @@ public class ActivitiesRemoteDataSource implements ActivitiesDataSource {
 
     @Override
     public void signInItem(int itemId, String address, boolean signIn, String token, final LoadMessageCallback callback) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitService.URL_BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RetrofitService.SignInService service = retrofit.create(RetrofitService.SignInService.class);
-        service.signIn(token,itemId,address)
-                .enqueue(new Callback<BaseResponse>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                        if (response.isSuccessful()) {
-                            L.d(LOG_TAG, response.body().getMessage());
-                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
-                        } else {
-                            callback.onDataNotAvailable();
-                            L.d(LOG_TAG, " error " + response.errorBody());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
-                        callback.onDataNotAvailable();
-                    }
-                });
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(RetrofitService.URL_BASE)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        RetrofitService.SignInService service = retrofit.create(RetrofitService.SignInService.class);
+//        service.signIn(token,itemId,address)
+//                .enqueue(new Callback<BaseResponse>() {
+//                    @Override
+//                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                        if (response.isSuccessful()) {
+//                            L.d(LOG_TAG, response.body().getMessage());
+//                            callback.onMessageLoaded(response.body().getStatus(),response.body().getMessage());
+//                        } else {
+//                            callback.onDataNotAvailable();
+//                            L.d(LOG_TAG, " error " + response.errorBody());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                        callback.onDataNotAvailable();
+//                    }
+//                });
     }
 
     @Override

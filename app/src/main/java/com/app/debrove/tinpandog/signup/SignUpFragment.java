@@ -152,6 +152,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View, Vie
             mBtnConfirmInfo.setEnabled(false);
             mBtnConfirmInfo.setText("预报名成功");
         } else if (status == 70003) {
+            sendNoticeOneDayBefore();
             Toast.makeText(getContext(), "你已经报过名了", Toast.LENGTH_SHORT).show();
             mBtnConfirmInfo.setEnabled(false);
             mBtnConfirmInfo.setText("预报名成功");
@@ -181,6 +182,7 @@ public class SignUpFragment extends Fragment implements SignUpContract.View, Vie
         calendar.set(t[0], t[1]-1, t[2]);
         whenActivityStart = calendar.getTimeInMillis();
         whenToSend = whenActivityStart - 24 * 60 * 60 * 1000;
+        L.d(LOG_TAG,whenToSend+" ");
         ActivityReminder.createRemind(getContext(), whenToSend, whenActivityStart, mTitle);
     }
 

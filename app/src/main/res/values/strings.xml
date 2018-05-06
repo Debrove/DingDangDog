@@ -9,7 +9,7 @@
     <string name="lectures_news">Lectures</string>
     <string name="empty_content">No Favorites</string>
     <string name="empty_schedule">No Tasks</string>
-    <string name="no_favorites">No Favorites</string>
+    <string name="no_favorites">All Empty</string>
     <string name="image_view_cover_desc">收藏图</string>
     <string name="remember_password">记住密码</string>
     <string name="userinfo">个人资料</string>

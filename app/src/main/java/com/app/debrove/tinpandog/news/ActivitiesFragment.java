@@ -142,7 +142,7 @@ public class ActivitiesFragment extends Fragment implements ActivitiesContract.V
         convenientBanner = (ConvenientBanner) LayoutInflater.from(getContext()).inflate(R.layout.banner_header, null);
         convenientBanner.setLayoutParams(
                 new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        getActivity().getWindowManager().getDefaultDisplay().getHeight() / 4));
+                        getActivity().getWindowManager().getDefaultDisplay().getHeight() / 5));
     }
 
     //获取轮播图

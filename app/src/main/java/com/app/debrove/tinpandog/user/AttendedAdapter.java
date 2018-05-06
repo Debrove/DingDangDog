@@ -27,7 +27,7 @@ import java.util.List;
  * description：
  */
 
-class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String LOG_TAG = AttendedAdapter.class.getSimpleName();
     @NonNull
@@ -47,8 +47,8 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private OnRecyclerViewItemOnClickListener mListener;
 
     AttendedAdapter(@NonNull Context mContext,
-                     @NonNull List<Activities> activitiesList,
-                     @NonNull List<Lectures> lecturesList) {
+                    @NonNull List<Activities> activitiesList,
+                    @NonNull List<Lectures> lecturesList) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.mActivitiesList = activitiesList;
@@ -56,8 +56,10 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         mWrapperList = new ArrayList<>();
 
+        L.d(LOG_TAG, "activitiesList " + activitiesList + " lecturesList" + lecturesList);
+
         mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_ACTIVITIES_CATEGORY));
-        if (mActivitiesList.isEmpty()) {
+        if (activitiesList.isEmpty()) {
             mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
         } else {
             for (int i = 0; i < mActivitiesList.size(); i++) {
@@ -68,7 +70,7 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_LECTURES_CATEGORY));
-        if (mLecturesList.isEmpty()) {
+        if (lecturesList.isEmpty()) {
             mWrapperList.add(new ItemWrapper(ItemWrapper.TYPE_EMPTY));
         } else {
             for (int i = 0; i < mLecturesList.size(); i++) {
@@ -77,7 +79,7 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 mWrapperList.add(iw);
             }
         }
-        L.d(LOG_TAG,mWrapperList+ " ");
+        L.d(LOG_TAG, mWrapperList + " ");
     }
 
     @Override
@@ -114,7 +116,7 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                 viewHolder.textView.setText(item.getTitle());
 //                String imgUrl = StaticClass.HEADER_IMG_URL + item.getPhoto_url();
-                L.d(LOG_TAG,item.getPhoto_url());
+                L.d(LOG_TAG, item.getPhoto_url());
 
                 Picasso.with(mContext)
                         .load(item.getPhoto_url())
@@ -128,7 +130,7 @@ class AttendedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                 viewHolder1.textView.setText(item1.getTitle());
 //                String imgUrl1 = StaticClass.HEADER_IMG_URL + item1.getPhoto_url();
-                L.d(LOG_TAG,item1.getPhoto_url());
+                L.d(LOG_TAG, item1.getPhoto_url());
 
                 Picasso.with(mContext)
                         .load(item1.getPhoto_url())

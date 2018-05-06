@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +15,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.debrove.tinpandog.R;
-import com.app.debrove.tinpandog.data.LoginResponse;
 import com.app.debrove.tinpandog.data.User;
 import com.app.debrove.tinpandog.favorites.FavoritesActivity;
-import com.app.debrove.tinpandog.retrofit.RetrofitService;
+import com.app.debrove.tinpandog.reminder.db.NoticeInfo;
 import com.app.debrove.tinpandog.util.L;
 import com.app.debrove.tinpandog.util.ShareUtils;
 import com.app.debrove.tinpandog.util.StaticClass;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by debrove on 2017/9/28.
@@ -45,6 +42,7 @@ public class UserFragment extends Fragment implements UserContract.View {
 
     private static final String LOG_TAG = UserFragment.class.getSimpleName();
 
+
     private UserContract.Presenter mPresenter;
 
     Unbinder unbinder;
@@ -54,6 +52,8 @@ public class UserFragment extends Fragment implements UserContract.View {
     TextView mUserName;
     @BindView(R.id.telephone)
     TextView mTelephone;
+    @BindView(R.id.notice_text)
+    TextView mNoticeText;
 
     private DrawerLayout mDrawerLayout;
 
@@ -76,10 +76,34 @@ public class UserFragment extends Fragment implements UserContract.View {
         //getUserInfoFromDB();
         //获取用户信息
         mPresenter.loadUserInfo(telephone, token);
+        showNoticeInfo();
 
         return view;
     }
 
+    /**
+     * 显示未到期活动数量，到期的从数据库删除
+     */
+    private void showNoticeInfo() {
+        List<NoticeInfo> noticeInfoList = DataSupport.findAll(NoticeInfo.class);
+        long time = System.currentTimeMillis();
+        int noticeNeedShownCount = 0;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        for (NoticeInfo noticeInfo : noticeInfoList) {
+            Date date = new Date(noticeInfo.getWhen());
+            L.d("attended", noticeInfo + " ");
+            Log.e(LOG_TAG, "my:" + simpleDateFormat.format(date) + " " +
+                    simpleDateFormat.format(noticeInfo.getWhen()) + " " + simpleDateFormat.format(time));
+            if (time >= noticeInfo.getWhen())
+                noticeInfo.delete();
+            else
+                noticeNeedShownCount++;
+        }
+        if (noticeNeedShownCount > 0)
+            mNoticeText.setText("当前活动数：" + noticeNeedShownCount);
+        else
+            mNoticeText.setText("没有待处理活动");
+    }
 
     @Override
     public void showInfo(List<User> userInfo) {
@@ -110,102 +134,6 @@ public class UserFragment extends Fragment implements UserContract.View {
         mPresenter.loadUserInfo(telephone, token);
         L.d(LOG_TAG, "token in refreshing " + token);
     }
-
-/*    private void getUserInfoFromDB() {
-        //获取注册或登录时输入的手机号，便于查询
-
-
-        //更新用户信息
-        getUserInfoFromNetwork();
-
-        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
-        L.d(LOG_TAG, "userList" + userList);
-        for (User user : userList) {
-            name = user.getName();
-            L.d(LOG_TAG, "name " + name);
-            stuNum = user.getNumber();
-        }
-        mUserName.setText(name);
-        mTelephone.setText(telephone);
-    }*/
-
-
-    //private void getUserInfoFromNetwork() {
-    //还要刷新token
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(RetrofitService.URL_BASE)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
-//        service.getInfo(token)
-//                .enqueue(new Callback<UserResponse>() {
-//                    @Override
-//                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-//                        if (response.isSuccessful()) {
-//                            String name = response.body().getData().getName();
-//                            long telephone = response.body().getData().getTelephone();
-//                            int stuNum = response.body().getData().getNumber();
-//                            L.d("userInfo", name + telephone + stuNum);
-//
-//                            //通过手机号码更新用户信息
-//                            User user = new User();
-//                            user.setName(name);
-//                            user.setNumber(String.valueOf(stuNum));
-//                            user.updateAll("telephone = ?", String.valueOf(telephone));
-//                            mUserName.setText(name);
-//                            //refreshToken();(测试刷新token)
-//                        } else {
-//                            L.d(LOG_TAG, "token过期或无效，获取用户信息失败");
-//                            refreshToken();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<UserResponse> call, Throwable t) {
-//                        L.d(LOG_TAG, "获取用户信息失败" + t.toString());
-//                        Toast.makeText(getContext(), "获取用户信息失败" + t.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-    // }
-
-//    private void refreshToken() {
-//        String password = "";
-//        List<User> userList = DataSupport.where("telephone = ?", telephone).find(User.class);
-//        for (User user : userList) {
-//            password = user.getPassword();
-//        }
-//
-//        L.d(LOG_TAG, "telephone" + telephone + "password" + password);
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(RetrofitService.URL_BASE)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        RetrofitService.UserService service = retrofit.create(RetrofitService.UserService.class);
-//        service.login(telephone, password)
-//                .enqueue(new Callback<LoginResponse>() {
-//                    @Override
-//                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-//                        if (response.isSuccessful()) {
-//                            L.d(LOG_TAG, "旧token" + token);
-//                            token = response.body().getData().getToken();
-//                            L.d(LOG_TAG, "获取token成功" + token);
-//                            ShareUtils.putString(getContext(), StaticClass.KEY_ACCESS_TOKEN, token);
-//                        } else {
-//                            L.d(LOG_TAG, "获取Token失败");
-//                            L.d(LOG_TAG, response.code() + "   " + response.errorBody());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-//                        L.d(LOG_TAG, "获取Token失败");
-//                    }
-//                });
-//
-//    }
 
     private void initView() {
         //Toolbar
@@ -239,8 +167,8 @@ public class UserFragment extends Fragment implements UserContract.View {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.ll_favorite, R.id.ll_user_info, R.id.ll_user_settings, R.id.ll_attended,
-            R.id.ll_cards, R.id.ll_comment, R.id.ll_notes})
+    @OnClick({R.id.ll_favorite, R.id.ll_user_info, R.id.ll_user_settings, R.id.ll_attended
+            , R.id.ll_notice})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_favorite:
@@ -261,11 +189,6 @@ public class UserFragment extends Fragment implements UserContract.View {
             case R.id.ll_attended:
                 Intent intent3 = new Intent(getActivity(), AttendedActivity.class);
                 startActivity(intent3);
-                break;
-            case R.id.ll_cards:
-            case R.id.ll_comment:
-            case R.id.ll_notes:
-                Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

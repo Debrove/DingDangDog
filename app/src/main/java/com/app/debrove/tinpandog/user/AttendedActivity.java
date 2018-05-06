@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -39,13 +40,13 @@ public class AttendedActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = AttendedActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar)
+    //    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.recycler_view)
+    //    @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.empty_view)
     LinearLayout mEmptyView;
-    @BindView(R.id.refresh_layout)
+    //    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
     private AttendedAdapter mAdapter;
@@ -61,11 +62,16 @@ public class AttendedActivity extends AppCompatActivity {
 
     private void initView() {
         //初始化Toolbar
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRefreshLayout = findViewById(R.id.refresh_layout);
 
         List<Activities> activitiesList = getActivitiesSignInList();
         List<Lectures> lecturesList = getLecturesSignInList();
@@ -83,46 +89,46 @@ public class AttendedActivity extends AppCompatActivity {
         if (mAdapter == null && activitiesList != null && lecturesList != null) {
             mAdapter = new AttendedAdapter(this, activitiesList, lecturesList);
 
-            mAdapter.setOnItemClickListener(new OnRecyclerViewItemOnClickListener() {
-                @Override
-                public void onItemClick(View v, int position) {
-                    int viewType = mAdapter.getItemViewType(position);
-                    L.d(LOG_TAG,"name "+activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getName()+
-                            "id "+activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getId());
-                    if (viewType == AttendedAdapter.ItemWrapper.TYPE_ACTIVITIES) {
-
-                        Intent intent = new Intent(AttendedActivity.this, DetailsActivity.class);
-                        //newsId为原始Id（而id为数据库重新整理后的id）
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, activitiesList.get(mAdapter.getOriginalIndex(position)).getTitle());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, activitiesList.get(mAdapter.getOriginalIndex(position)).getTime());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, activitiesList.get(mAdapter.getOriginalIndex(position)).getHolder());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, activitiesList.get(mAdapter.getOriginalIndex(position)).getDetail());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, activitiesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, activitiesList.get(mAdapter.getOriginalIndex(position)).isFavourite());
-
-                        String place = GetInfos.getPlace(activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
-
-                        startActivity(intent);
-                    } else if (viewType == AttendedAdapter.ItemWrapper.TYPE_LECTURES) {
-                        Intent intent = new Intent(AttendedActivity.this, DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, lecturesList.get(mAdapter.getOriginalIndex(position)).getTitle());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, lecturesList.get(mAdapter.getOriginalIndex(position)).getTime());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, lecturesList.get(mAdapter.getOriginalIndex(position)).getHolder());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, lecturesList.get(mAdapter.getOriginalIndex(position)).getDetail());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, lecturesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, lecturesList.get(mAdapter.getOriginalIndex(position)).isFavorite());
-
-                        String place = GetInfos.getPlace(lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
-                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
-                        startActivity(intent);
-                    }
-                }
-            });
+//            mAdapter.setOnItemClickListener(new OnRecyclerViewItemOnClickListener() {
+//                @Override
+//                public void onItemClick(View v, int position) {
+//                    int viewType = mAdapter.getItemViewType(position);
+//                    L.d(LOG_TAG, "name " + activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getName() +
+//                            "id " + activitiesList.get(mAdapter.getOriginalIndex(position)).getPlace_id().getId());
+//                    if (viewType == AttendedAdapter.ItemWrapper.TYPE_ACTIVITIES) {
+//
+//                        Intent intent = new Intent(AttendedActivity.this, DetailsActivity.class);
+//                        //newsId为原始Id（而id为数据库重新整理后的id）
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, activitiesList.get(mAdapter.getOriginalIndex(position)).getTitle());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, activitiesList.get(mAdapter.getOriginalIndex(position)).getTime());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, activitiesList.get(mAdapter.getOriginalIndex(position)).getHolder());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, activitiesList.get(mAdapter.getOriginalIndex(position)).getDetail());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, activitiesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, activitiesList.get(mAdapter.getOriginalIndex(position)).isFavourite());
+//
+//                        String place = GetInfos.getPlace(activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
+//
+//                        startActivity(intent);
+//                    } else if (viewType == AttendedAdapter.ItemWrapper.TYPE_LECTURES) {
+//                        Intent intent = new Intent(AttendedActivity.this, DetailsActivity.class);
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_ID, lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TITLE, lecturesList.get(mAdapter.getOriginalIndex(position)).getTitle());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_TIME, lecturesList.get(mAdapter.getOriginalIndex(position)).getTime());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_HOLDER, lecturesList.get(mAdapter.getOriginalIndex(position)).getHolder());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_CONTENT, lecturesList.get(mAdapter.getOriginalIndex(position)).getDetail());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IMAGE, lecturesList.get(mAdapter.getOriginalIndex(position)).getPhoto_url());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_IS_FAVORITE, lecturesList.get(mAdapter.getOriginalIndex(position)).isFavorite());
+//
+//                        String place = GetInfos.getPlace(lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
+//                        intent.putExtra(DetailsActivity.KEY_ARTICLE_PLACE, place);
+//                        startActivity(intent);
+//                    }
+//                }
+//            });
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.updateData(activitiesList, lecturesList);

@@ -137,51 +137,48 @@ public class ScheduleFragment extends Fragment implements ScheduleContract.View,
 
     @Override
     public void showList(final List<Activities> activitiesList, final List<Lectures> lecturesList) {
+        boolean isEmpty = true;
         if (activitiesList == null && lecturesList == null) {
             mEmptyView.setVisibility(View.VISIBLE);
             setLoadingIndicator(false);
             return;
+        } else {
+            isEmpty = false;
         }
         L.d(LOG_TAG, activitiesList + " " + lecturesList);
 
-        if (mAdapter == null && activitiesList != null && lecturesList != null) {
+        if (mAdapter == null && !isEmpty) {
             L.d(LOG_TAG, activitiesList + " 1 " + lecturesList);
             mActivitiesList = activitiesList;
             mLecturesList = lecturesList;
 
-            mAdapter = new ScheduleAdapter(getContext(), activitiesList, lecturesList);
+            mAdapter = new ScheduleAdapter(getContext(), mActivitiesList, mLecturesList);
             mAdapter.setItemClickListener(new OnRecyclerViewItemOnClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
                     int viewType = mAdapter.getItemViewType(position);
-                    L.d(LOG_TAG,"viewType "+viewType+" "+ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES);
+                    L.d(LOG_TAG, "viewType " + viewType + " " + ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES);
 
                     switch (v.getId()) {
                         case R.id.btn_sign_in:
-                            L.d("signIN", "signIn "+position);
+                            L.d("signIN", "signIn " + position);
 //                            L.d(LOG_TAG,activitiesList.get(mAdapter.getOriginalIndex(position)).getNewsId()+
 //                                    " id "+ lecturesList.get(mAdapter.getOriginalIndex(position)).getNewsId());
 
-                            if (viewType == ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES){
+                            if (viewType == ScheduleAdapter.ItemWrapper.TYPE_ACTIVITIES) {
                                 Intent intent = new Intent(getContext(), SignInActivity.class);
-                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID,activitiesList.
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID, activitiesList.
                                         get(mAdapter.getOriginalIndex(position)).getNewsId());
                                 intent.putExtra(SignInActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_ACTIVITIES);
                                 startActivity(intent);
-                            }else if (viewType == ScheduleAdapter.ItemWrapper.TYPE_LECTURES){
+                            } else if (viewType == ScheduleAdapter.ItemWrapper.TYPE_LECTURES) {
                                 Intent intent = new Intent(getContext(), SignInActivity.class);
-                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID,lecturesList.
+                                intent.putExtra(SignInActivity.KEY_ARTICLE_ID, lecturesList.
                                         get(mAdapter.getOriginalIndex(position)).getNewsId());
                                 intent.putExtra(SignInActivity.KEY_ARTICLE_TYPE, ContentType.TYPE_LECTURES);
                                 startActivity(intent);
                             }
-                            
-                            break;
-                        case R.id.btn_share:
-                            Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
-                            break;
-                        case R.id.btn_comment:
-                            Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();
+
                             break;
                         default:
                             Toast.makeText(getContext(), "敬请期待", Toast.LENGTH_SHORT).show();

@@ -57,7 +57,40 @@
 
         </com.app.debrove.tinpandog.view.CustomEditText>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="start"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="当前位置："
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_sign_in_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text=""
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
 
 
     </LinearLayout>

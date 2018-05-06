@@ -9,22 +9,12 @@
         android:id="@+id/drawer_attended"
         android:icon="@drawable/star"
         android:title="参加过的活动"/>
-    <item
-        android:id="@+id/drawer_sign_in"
-        android:icon="@drawable/scan"
-        android:title="签到"/>
-    <item
-        android:id="@+id/drawer_comment"
-        android:icon="@drawable/ic_comment_blue_500_24dp"
-        android:title="待评价"/>
+
     <item
         android:id="@+id/drawer_favorite"
         android:icon="@drawable/ic_favorite_red_600_24dp"
         android:title="收藏"/>
-    <item
-        android:id="@+id/drawer_notes"
-        android:icon="@drawable/ic_folder_orange_700_24dp"
-        android:title="活动笔记"/>
+
     <item
         android:id="@+id/setting"
         android:icon="@drawable/ic_settings_blue_500_24dp"
